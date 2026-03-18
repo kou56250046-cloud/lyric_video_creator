@@ -3,2177 +3,1789 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LYRIC MOTION — 歌詞動画クリエイター</title>
+<title>LYRIC MOTION</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700;900&family=Space+Mono:wght@400;700&family=Bebas+Neue&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700;900&family=Space+Mono:wght@400;700&family=Bebas+Neue&display=swap');
+:root {
+  --bg:#0a0a0f; --panel:#12121a; --panel2:#1a1a26; --border:#2a2a3e;
+  --accent:#7c3aed; --accent2:#a855f7; --accent3:#06b6d4;
+  --text:#e8e8f0; --text2:#8888aa; --red:#ef4444; --green:#22c55e;
+  --anim-dur:0.5s; --loop-dur:2s; --bg-motion-dur:20s;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
 
-  :root {
-    --bg: #0a0a0f;
-    --panel: #12121a;
-    --panel2: #1a1a26;
-    --border: #2a2a3e;
-    --accent: #7c3aed;
-    --accent2: #a855f7;
-    --accent3: #06b6d4;
-    --text: #e8e8f0;
-    --text2: #8888aa;
-    --red: #ef4444;
-    --green: #22c55e;
-    --yellow: #eab308;
-  }
+/* HEADER */
+header{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;background:var(--panel);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:3px;background:linear-gradient(90deg,var(--accent2),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.logo span{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--text2);display:block;-webkit-text-fill-color:var(--text2);margin-top:-4px}
+.hbtn{background:var(--panel2);border:1px solid var(--border);color:var(--text2);border-radius:6px;padding:6px 14px;font-size:12px;cursor:pointer}
+.hbtn-primary{background:linear-gradient(135deg,var(--accent),var(--accent3));border:none;color:white;font-weight:700;letter-spacing:1px}
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+/* WORKSPACE */
+.workspace{display:grid;grid-template-columns:320px 1fr 290px;height:calc(100vh - 57px)}
 
-  body {
-    font-family: 'Noto Sans JP', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+/* PANELS */
+.panel{background:var(--panel);border-right:1px solid var(--border);overflow-y:auto;display:flex;flex-direction:column}
+.panel-title{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--text2);padding:12px 16px 10px;border-bottom:1px solid var(--border);text-transform:uppercase}
+.style-panel{background:var(--panel);border-left:1px solid var(--border);overflow-y:auto}
+.style-group{padding:14px 16px;border-bottom:1px solid var(--border)}
+.sgt{font-size:10px;letter-spacing:2px;color:var(--text2);font-family:'Space Mono',monospace;margin-bottom:10px;text-transform:uppercase}
+.slabel{font-size:11px;color:var(--text2);letter-spacing:1px;margin-bottom:6px;display:block}
+.input-section{padding:14px 16px;border-bottom:1px solid var(--border)}
 
-  /* ===== HEADER ===== */
-  header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 28px;
-    background: var(--panel);
-    border-bottom: 1px solid var(--border);
-    position: sticky; top: 0; z-index: 100;
-  }
-  .logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 26px;
-    letter-spacing: 3px;
-    background: linear-gradient(90deg, var(--accent2), var(--accent3));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  .logo span { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 2px; color: var(--text2); display: block; -webkit-text-fill-color: var(--text2); margin-top: -4px; }
-  .header-actions { display: flex; gap: 10px; }
+/* FORM ELEMENTS */
+select.ss,textarea.la,input[type=range]{width:100%}
+select.ss{background:var(--panel2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px 8px;font-size:12px;outline:none;margin-bottom:8px;cursor:pointer}
+textarea.la{background:var(--panel2);border:1px solid var(--border);color:var(--text);border-radius:8px;font-family:'Noto Sans JP',sans-serif;font-size:13px;padding:10px 12px;resize:none;line-height:1.7;outline:none;transition:border-color .2s}
+textarea.la:focus{border-color:var(--accent)}
+input[type=range]{-webkit-appearance:none;height:3px;background:var(--border);border-radius:2px;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;background:var(--accent2);border-radius:50%;cursor:pointer}
+input[type=color]{width:32px;height:24px;border:none;border-radius:4px;cursor:pointer;background:none}
 
-  /* ===== LAYOUT ===== */
-  .workspace {
-    display: grid;
-    grid-template-columns: 340px 1fr 300px;
-    height: calc(100vh - 57px);
-  }
+/* ROWS */
+.ctrl-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.ctrl-label{font-size:12px;color:var(--text2)}
+.ctrl-val{font-family:'Space Mono',monospace;font-size:11px;color:var(--accent2);min-width:36px;text-align:right}
+.color-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.color-row label{font-size:12px;color:var(--text2);flex:1}
+.swatch-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.swatch{width:24px;height:24px;border-radius:4px;cursor:pointer;border:2px solid transparent;transition:all .15s}
+.swatch.active{border-color:white;transform:scale(1.2)}
 
-  /* ===== PANELS ===== */
-  .panel {
-    background: var(--panel);
-    border-right: 1px solid var(--border);
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-  }
-  .panel-title {
-    font-family: 'Space Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 2px;
-    color: var(--text2);
-    padding: 14px 18px 10px;
-    border-bottom: 1px solid var(--border);
-    text-transform: uppercase;
-  }
+/* BUTTONS */
+.btn-row{display:flex;gap:6px}
+.abtn{padding:6px 4px;background:var(--panel2);border:1px solid var(--border);color:var(--text2);border-radius:6px;font-size:10px;cursor:pointer;text-align:center;transition:all .15s;line-height:1.4}
+.abtn:hover,.abtn.active{background:rgba(124,58,237,.25);border-color:var(--accent);color:var(--text)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:8px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-bottom:8px}
+.tabtrow{display:flex;gap:0;margin-bottom:12px;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.atab{flex:1;padding:7px 4px;background:var(--panel2);border:none;color:var(--text2);font-size:10px;cursor:pointer;transition:all .15s;text-align:center;font-family:'Space Mono',monospace}
+.atab.active{background:var(--accent);color:white}
+.tabpane{display:none}.tabpane.show{display:block}
+.pbtn{width:100%;padding:8px;margin:6px 0;background:linear-gradient(135deg,rgba(124,58,237,.3),rgba(6,182,212,.3));border:1px solid var(--accent);border-radius:8px;color:var(--accent2);font-size:11px;cursor:pointer;font-family:'Space Mono',monospace;letter-spacing:1px;transition:all .2s}
+.pbtn:hover{background:linear-gradient(135deg,rgba(124,58,237,.5),rgba(6,182,212,.5))}
+.speed-row{display:flex;gap:5px;margin:8px 0}
+.spdbtn{flex:1;padding:5px 2px;background:var(--panel2);border:1px solid var(--border);color:var(--text2);border-radius:6px;font-size:10px;cursor:pointer;text-align:center;transition:all .15s;font-family:'Space Mono',monospace}
+.spdbtn.active{background:rgba(6,182,212,.2);border-color:var(--accent3);color:var(--accent3)}
+.export-btn{margin:14px 16px;width:calc(100% - 32px);padding:12px;background:linear-gradient(135deg,#7c3aed,#06b6d4);border:none;border-radius:10px;color:white;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:2px;font-family:'Space Mono',monospace;transition:opacity .2s}
+.export-btn:hover{opacity:.88}
 
-  /* ===== INPUT PANEL ===== */
-  .input-section { padding: 16px; border-bottom: 1px solid var(--border); }
-  .section-label {
-    font-size: 11px;
-    color: var(--text2);
-    letter-spacing: 1px;
-    margin-bottom: 8px;
-    font-family: 'Space Mono', monospace;
-  }
+/* UPLOAD */
+.upzone{border:2px dashed var(--border);border-radius:10px;padding:20px;text-align:center;cursor:pointer;transition:all .25s;position:relative}
+.upzone:hover{border-color:var(--accent);background:rgba(124,58,237,.05)}
+.upzone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%}
+.file-info{display:flex;align-items:center;gap:10px;background:rgba(124,58,237,.1);border:1px solid var(--accent);border-radius:8px;padding:10px 12px;margin-top:8px}
+.audio-player{background:var(--panel2);border-radius:10px;padding:12px;margin-top:10px}
+.play-btn{width:36px;height:36px;background:var(--accent);border:none;border-radius:50%;cursor:pointer;color:white;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .2s}
+.play-btn:hover{background:var(--accent2)}
+.prow{display:flex;align-items:center;gap:10px}
+.progbar{flex:1;height:4px;background:var(--border);border-radius:2px;cursor:pointer;position:relative}
+.progfill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent3));border-radius:2px;pointer-events:none;transition:width .1s}
+.timedisp{font-family:'Space Mono',monospace;font-size:11px;color:var(--text2);white-space:nowrap}
+.btn-auto{width:100%;padding:9px;background:linear-gradient(135deg,var(--accent),var(--accent3));border:none;border-radius:8px;color:white;font-size:12px;font-weight:700;cursor:pointer;margin-bottom:10px;letter-spacing:1px}
 
-  .upload-zone {
-    border: 2px dashed var(--border);
-    border-radius: 10px;
-    padding: 22px 16px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.25s;
-    position: relative;
-  }
-  .upload-zone:hover { border-color: var(--accent); background: rgba(124,58,237,0.05); }
-  .upload-zone.active { border-color: var(--accent2); background: rgba(168,85,247,0.1); }
-  .upload-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; }
-  .upload-icon { font-size: 28px; margin-bottom: 6px; }
-  .upload-text { font-size: 13px; color: var(--text2); }
-  .upload-text b { color: var(--accent2); }
-  .file-info {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: rgba(124,58,237,0.1);
-    border: 1px solid var(--accent);
-    border-radius: 8px;
-    padding: 10px 12px;
-    margin-top: 8px;
-  }
-  .file-info .fi-icon { font-size: 20px; }
-  .file-info .fi-name { font-size: 12px; font-weight: 700; }
-  .file-info .fi-size { font-size: 11px; color: var(--text2); }
+/* TIMECODE LIST */
+.tclist{padding:0 14px 14px;flex:1;overflow-y:auto}
+.tcitem{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);cursor:pointer}
+.tcitem.cur .tcbadge{background:var(--accent);color:white;border-color:var(--accent)}
+.tcitem.cur .tctext{color:white;font-weight:700}
+.tcbadge{font-family:'Space Mono',monospace;font-size:10px;background:var(--panel2);border:1px solid var(--border);border-radius:4px;padding:2px 6px;color:var(--accent3);cursor:pointer;white-space:nowrap;transition:all .15s;flex-shrink:0}
+.tcbadge:hover,.tcbadge.set{background:rgba(6,182,212,.15);border-color:var(--accent3)}
+.tctext{font-size:12px;flex:1}
+.tcdel{color:var(--text2);font-size:13px;cursor:pointer;opacity:0;transition:opacity .15s}
+.tcitem:hover .tcdel{opacity:1}
+.tag-pill{display:inline-block;background:rgba(124,58,237,.15);border:1px solid rgba(124,58,237,.4);border-radius:20px;padding:2px 10px;font-size:10px;color:var(--accent2);font-family:'Space Mono',monospace;margin-left:6px}
 
-  /* Audio player */
-  .audio-player {
-    background: var(--panel2);
-    border-radius: 10px;
-    padding: 12px;
-    margin-top: 10px;
-  }
-  .player-row { display: flex; align-items: center; gap: 10px; }
-  .play-btn {
-    width: 36px; height: 36px;
-    background: var(--accent);
-    border: none; border-radius: 50%;
-    cursor: pointer; color: white; font-size: 14px;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0; transition: background 0.2s;
-  }
-  .play-btn:hover { background: var(--accent2); }
-  .time-display { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--text2); white-space: nowrap; }
-  .progress-bar {
-    flex: 1; height: 4px;
-    background: var(--border);
-    border-radius: 2px;
-    cursor: pointer;
-    position: relative;
-  }
-  .progress-fill {
-    height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent3));
-    border-radius: 2px;
-    transition: width 0.1s;
-    pointer-events: none;
-  }
+/* PREVIEW */
+.preview-panel{background:#060608;display:flex;flex-direction:column;align-items:stretch}
+.prev-toolbar{display:flex;align-items:center;gap:10px;padding:10px 16px;background:var(--panel);border-bottom:1px solid var(--border)}
+.prev-toolbar select,.prev-toolbar button{background:var(--panel2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer}
+.plabel{font-size:11px;color:var(--text2);font-family:'Space Mono',monospace}
+.stage-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:24px;background:repeating-conic-gradient(#111 0% 25%,transparent 0% 50%) 0 0/16px 16px}
+.stage{position:relative;overflow:hidden;box-shadow:0 0 60px rgba(124,58,237,.3)}
+.r169{width:100%;max-width:720px;aspect-ratio:16/9}
+.r916{width:300px;aspect-ratio:9/16}
+.r11{width:400px;aspect-ratio:1/1}
+.sbg{position:absolute;inset:0}
+.scontent{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:5%;text-align:center}
+.ldisp{will-change:transform,opacity;width:100%}
+.lprev,.lnext{opacity:0;pointer-events:none;width:100%}
+.vizbar{position:absolute;bottom:0;left:0;right:0;height:60px;display:flex;align-items:flex-end;justify-content:center;gap:2px;padding:0 10%;opacity:.4;pointer-events:none}
+.vizitem{flex:1;border-radius:2px 2px 0 0;transition:height .1s}
+.wcanvas{position:absolute;bottom:0;left:0;right:0;height:80px;pointer-events:none}
 
-  /* Lyrics textarea */
-  .lyrics-area {
-    width: 100%;
-    background: var(--panel2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    color: var(--text);
-    font-family: 'Noto Sans JP', sans-serif;
-    font-size: 13px;
-    padding: 10px 12px;
-    resize: none;
-    line-height: 1.7;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-  .lyrics-area:focus { border-color: var(--accent); }
-  .lyrics-area::placeholder { color: var(--text2); }
+/* BG IMAGE LAYER */
+.sbg-img{position:absolute;inset:-10%;width:120%;height:120%;background-size:cover;background-position:center;transform-origin:center center;will-change:transform}
+.sbg-vid{position:absolute;inset:-10%;width:120%;height:120%;object-fit:cover;transform-origin:center center;will-change:transform}
 
-  /* Timecode list */
-  .timecode-list { padding: 0 16px 16px; flex: 1; overflow-y: auto; }
-  .tc-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.04);
-    cursor: pointer;
-    transition: background 0.15s;
-  }
-  .tc-item:hover .tc-text { color: var(--accent2); }
-  .tc-badge {
-    font-family: 'Space Mono', monospace;
-    font-size: 10px;
-    background: var(--panel2);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 3px 7px;
-    color: var(--accent3);
-    cursor: pointer;
-    white-space: nowrap;
-    transition: all 0.15s;
-    flex-shrink: 0;
-  }
-  .tc-badge:hover { background: var(--accent3); color: #000; }
-  .tc-badge.set { background: rgba(6,182,212,0.15); border-color: var(--accent3); }
-  .tc-text { font-size: 12px; flex: 1; }
-  .tc-delete { color: var(--text2); font-size: 14px; cursor: pointer; opacity: 0; transition: opacity 0.15s; }
-  .tc-item:hover .tc-delete { opacity: 1; }
+/* MEDIA LAYERS UI */
+.ml-add{padding:8px 6px;background:var(--panel2);border:1px dashed var(--border);color:var(--text2);border-radius:8px;font-size:11px;cursor:pointer;transition:all .15s;text-align:center;flex:1}
+.ml-add:hover{border-color:var(--accent);color:var(--accent2);background:rgba(124,58,237,.1)}
+.ml-item{display:flex;align-items:center;gap:8px;background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:8px 10px;cursor:pointer;transition:all .15s;position:relative;user-select:none}
+.ml-item:hover{border-color:var(--accent)}
+.ml-item.sel{border-color:var(--accent2);background:rgba(124,58,237,.1)}
+.ml-item.now{border-color:var(--accent);box-shadow:0 0 10px rgba(124,58,237,.4)}
+.ml-item.dragging{opacity:.4;border-style:dashed}
+.ml-item.drag-over{border-top:2px solid var(--accent3)}
+.now-badge{position:absolute;top:-6px;left:8px;background:var(--accent);color:white;font-size:9px;font-family:'Space Mono',monospace;padding:1px 6px;border-radius:4px}
+.ml-thumb{width:50px;height:34px;border-radius:4px;object-fit:cover;flex-shrink:0;background:#000;border:1px solid var(--border)}
+.ml-thumb-img{width:50px;height:34px;border-radius:4px;background-size:cover;background-position:center;flex-shrink:0;border:1px solid var(--border)}
+.ml-info{flex:1;min-width:0}
+.ml-name{font-size:11px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ml-meta{font-size:10px;color:var(--text2);font-family:'Space Mono',monospace;margin-top:2px}
+.ml-type{font-size:9px;padding:2px 5px;border-radius:4px;font-family:'Space Mono',monospace;flex-shrink:0}
+.ml-type.image{background:rgba(6,182,212,.15);color:var(--accent3);border:1px solid rgba(6,182,212,.3)}
+.ml-type.video{background:rgba(168,85,247,.15);color:var(--accent2);border:1px solid rgba(168,85,247,.3)}
+.ml-acts{display:flex;gap:3px;flex-shrink:0}
+.lbtn{width:22px;height:22px;background:var(--panel);border:1px solid var(--border);border-radius:4px;color:var(--text2);cursor:pointer;font-size:10px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.lbtn:hover{background:var(--accent);border-color:var(--accent);color:white}
+.lbtn.del:hover{background:var(--red);border-color:var(--red)}
+.drag-handle{color:var(--text2);font-size:12px;cursor:grab;padding:0 2px;opacity:.5}
+.drag-handle:hover{opacity:1;color:var(--accent2)}
+.bg-type-row{display:flex;gap:5px;margin-bottom:10px;flex-wrap:wrap}
+.bgtbtn{flex:1;min-width:60px;padding:6px 4px;background:var(--panel2);border:1px solid var(--border);color:var(--text2);border-radius:6px;font-size:11px;cursor:pointer;transition:all .15s;text-align:center}
+.bgtbtn.active{background:rgba(124,58,237,.2);border-color:var(--accent);color:var(--text)}
+.grad-stops{display:flex;gap:6px;align-items:center;margin-bottom:8px}
+.ptype-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-bottom:8px}
+.ptbtn{padding:6px 4px;background:var(--panel2);border:1px solid var(--border);color:var(--text2);border-radius:6px;font-size:10px;cursor:pointer;text-align:center;transition:all .15s}
+.ptbtn:hover,.ptbtn.active{background:rgba(124,58,237,.2);border-color:var(--accent);color:var(--text)}
+.visbtn{flex:1;padding:6px;background:var(--panel2);border:1px solid var(--border);color:var(--text2);border-radius:6px;font-size:10px;cursor:pointer;transition:all .15s;text-align:center}
+.visbtn.active{background:rgba(124,58,237,.2);border-color:var(--accent);color:var(--text)}
+.empty-msg{font-size:11px;color:var(--text2);text-align:center;padding:24px 0;border:1px dashed var(--border);border-radius:8px}
 
-  .btn-auto-parse {
-    width: 100%;
-    padding: 9px;
-    background: linear-gradient(135deg, var(--accent), var(--accent3));
-    border: none;
-    border-radius: 8px;
-    color: white;
-    font-size: 12px;
-    font-weight: 700;
-    cursor: pointer;
-    margin-bottom: 12px;
-    letter-spacing: 1px;
-    transition: opacity 0.2s;
-  }
-  .btn-auto-parse:hover { opacity: 0.85; }
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-40px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes scaleIn{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:scale(1)}}
+@keyframes scaleInBig{from{opacity:0;transform:scale(1.6)}to{opacity:1;transform:scale(1)}}
+@keyframes slideLeft{from{opacity:0;transform:translateX(-80px)}to{opacity:1;transform:translateX(0)}}
+@keyframes slideRight{from{opacity:0;transform:translateX(80px)}to{opacity:1;transform:translateX(0)}}
+@keyframes bounceIn{0%{opacity:0;transform:scale(.2)}55%{opacity:1;transform:scale(1.12)}75%{transform:scale(.94)}90%{transform:scale(1.04)}100%{transform:scale(1)}}
+@keyframes spinIn{from{opacity:0;transform:rotate(-200deg) scale(.2)}to{opacity:1;transform:rotate(0) scale(1)}}
+@keyframes blurIn{from{opacity:0;filter:blur(30px);transform:scale(1.15)}to{opacity:1;filter:blur(0);transform:scale(1)}}
+@keyframes flipInX{from{opacity:0;transform:perspective(400px) rotateX(90deg)}to{opacity:1;transform:perspective(400px) rotateX(0)}}
+@keyframes flipInY{from{opacity:0;transform:perspective(400px) rotateY(90deg)}to{opacity:1;transform:perspective(400px) rotateY(0)}}
+@keyframes dropIn{from{opacity:0;transform:translateY(-120%) rotate(-10deg)}to{opacity:1;transform:translateY(0) rotate(0)}}
+@keyframes typewriter{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0% 0 0)}}
+@keyframes glitch{0%,88%,100%{clip-path:inset(0);transform:translate(0)}90%{clip-path:inset(15% 0 55% 0);transform:translate(-6px,2px);color:#0ff}93%{clip-path:inset(65% 0 8% 0);transform:translate(6px,-2px);color:#f0f}96%{clip-path:inset(35% 0 25% 0);transform:translate(-3px,1px)}}
+@keyframes shake{0%,100%{transform:translateX(0)}15%{transform:translateX(-10px) rotate(-2deg)}35%{transform:translateX(10px) rotate(2deg)}55%{transform:translateX(-8px)}75%{transform:translateX(8px)}90%{transform:translateX(-4px)}}
+@keyframes reveal{from{clip-path:inset(0 0 100% 0)}to{clip-path:inset(0 0 0% 0)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+@keyframes neon{0%,100%{text-shadow:0 0 8px currentColor,0 0 25px currentColor}50%{text-shadow:0 0 20px currentColor,0 0 60px currentColor,0 0 110px currentColor}}
+@keyframes glitchLoop{0%,92%,100%{transform:translate(0)}93%{transform:translate(-5px,2px);color:#0ff}95%{transform:translate(5px,-2px);color:#f0f}}
+@keyframes charFall{from{opacity:0;transform:translateY(-60px) rotate(var(--r,0deg))}to{opacity:1;transform:translateY(0) rotate(0)}}
+@keyframes charSlide{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes charScale{from{opacity:0;transform:scale(0)}to{opacity:1;transform:scale(1)}}
+@keyframes charFlip{from{opacity:0;transform:rotateY(90deg)}to{opacity:1;transform:rotateY(0)}}
+@keyframes charBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+@keyframes charWave{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes charGlitch{0%,100%{transform:translate(0)}25%{transform:translate(-3px,1px);color:#0ff}75%{transform:translate(3px,-1px);color:#f0f}}
+@keyframes exitFadeOut{from{opacity:1}to{opacity:0}}
+@keyframes exitFadeDown{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(40px)}}
+@keyframes exitFadeUp{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-40px)}}
+@keyframes exitScaleOut{from{opacity:1;transform:scale(1)}to{opacity:0;transform:scale(.4)}}
+@keyframes exitScaleBig{from{opacity:1;transform:scale(1)}to{opacity:0;transform:scale(1.8)}}
+@keyframes exitSlideL{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(-100px)}}
+@keyframes exitSlideR{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(100px)}}
+@keyframes exitBlur{from{opacity:1;filter:blur(0)}to{opacity:0;filter:blur(30px)}}
+@keyframes exitFlip{from{opacity:1;transform:perspective(400px) rotateX(0)}to{opacity:0;transform:perspective(400px) rotateX(-90deg)}}
+@keyframes bgZoomIn{from{transform:scale(1)}to{transform:scale(1.25)}}
+@keyframes bgZoomOut{from{transform:scale(1.25)}to{transform:scale(1)}}
+@keyframes bgPanL{from{transform:scale(1.2) translateX(0)}to{transform:scale(1.2) translateX(-8%)}}
+@keyframes bgPanR{from{transform:scale(1.2) translateX(0)}to{transform:scale(1.2) translateX(8%)}}
+@keyframes bgPanU{from{transform:scale(1.2) translateY(0)}to{transform:scale(1.2) translateY(-8%)}}
+@keyframes bgPanD{from{transform:scale(1.2) translateY(0)}to{transform:scale(1.2) translateY(8%)}}
+@keyframes bgKen{0%{transform:scale(1) translate(0,0)}33%{transform:scale(1.15) translate(3%,-2%)}66%{transform:scale(1.2) translate(-3%,3%)}100%{transform:scale(1.1) translate(2%,-1%)}}
+@keyframes bgPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+@keyframes bgWave{0%,100%{transform:scale(1.1) skewX(0) translateY(0)}25%{transform:scale(1.12) skewX(1deg) translateY(-8px)}75%{transform:scale(1.12) skewX(-1deg) translateY(8px)}}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-  /* ===== CENTER — PREVIEW ===== */
-  .preview-panel {
-    background: #060608;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-  }
-  .preview-toolbar {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 16px;
-    background: var(--panel);
-    border-bottom: 1px solid var(--border);
-  }
-  .preview-toolbar select, .preview-toolbar button {
-    background: var(--panel2);
-    border: 1px solid var(--border);
-    color: var(--text);
-    border-radius: 6px;
-    padding: 5px 10px;
-    font-size: 12px;
-    cursor: pointer;
-  }
-  .preview-toolbar select:focus { outline: none; border-color: var(--accent); }
-  .preview-label { font-size: 11px; color: var(--text2); font-family: 'Space Mono', monospace; }
+/* ENTER CLASS BINDINGS */
+.e-fadeUp .ldisp{animation:fadeUp var(--anim-dur) cubic-bezier(.34,1.56,.64,1) both}
+.e-fadeDown .ldisp{animation:fadeDown var(--anim-dur) cubic-bezier(.34,1.56,.64,1) both}
+.e-fadeIn .ldisp{animation:fadeIn var(--anim-dur) ease both}
+.e-scaleIn .ldisp{animation:scaleIn var(--anim-dur) cubic-bezier(.34,1.56,.64,1) both}
+.e-scaleInBig .ldisp{animation:scaleInBig var(--anim-dur) ease both}
+.e-slideLeft .ldisp{animation:slideLeft var(--anim-dur) ease both}
+.e-slideRight .ldisp{animation:slideRight var(--anim-dur) ease both}
+.e-bounceIn .ldisp{animation:bounceIn var(--anim-dur) ease both}
+.e-spinIn .ldisp{animation:spinIn var(--anim-dur) ease both}
+.e-blurIn .ldisp{animation:blurIn var(--anim-dur) ease both}
+.e-flipInX .ldisp{animation:flipInX var(--anim-dur) ease both}
+.e-flipInY .ldisp{animation:flipInY var(--anim-dur) ease both}
+.e-dropIn .ldisp{animation:dropIn var(--anim-dur) cubic-bezier(.34,1.56,.64,1) both}
+.e-typewriter .ldisp{animation:typewriter var(--anim-dur) steps(24,end) both}
+.e-glitch .ldisp{animation:glitch var(--anim-dur) ease both}
+.e-shake .ldisp{animation:shake var(--anim-dur) ease both}
+.e-reveal .ldisp{animation:reveal var(--anim-dur) ease both}
+.e-float .ldisp{animation:float var(--loop-dur) ease-in-out infinite}
+.e-pulse .ldisp{animation:pulse var(--loop-dur) ease-in-out infinite}
+.e-neon .ldisp{animation:neon var(--loop-dur) ease-in-out infinite}
+.e-glitchLoop .ldisp{animation:glitchLoop 3s linear infinite}
 
-  .preview-stage-wrap {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-    background: repeating-conic-gradient(#111 0% 25%, transparent 0% 50%) 0 0 / 16px 16px;
-  }
+/* EXIT CLASS BINDINGS */
+.x-fadeOut .ldisp.exit{animation:exitFadeOut .4s ease both}
+.x-fadeDown .ldisp.exit{animation:exitFadeDown .4s ease both}
+.x-fadeUp .ldisp.exit{animation:exitFadeUp .4s ease both}
+.x-scaleOut .ldisp.exit{animation:exitScaleOut .35s ease both}
+.x-scaleBig .ldisp.exit{animation:exitScaleBig .35s ease both}
+.x-slideLeft .ldisp.exit{animation:exitSlideL .35s ease both}
+.x-slideRight .ldisp.exit{animation:exitSlideR .35s ease both}
+.x-blur .ldisp.exit{animation:exitBlur .4s ease both}
+.x-flipOut .ldisp.exit{animation:exitFlip .4s ease both}
 
-  .preview-stage {
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 0 60px rgba(124,58,237,0.3);
-  }
+/* BG MOTION */
+.sbg-img.m-zoomIn,.sbg-vid.m-zoomIn{animation:bgZoomIn var(--bg-motion-dur) ease-in-out infinite alternate}
+.sbg-img.m-zoomOut,.sbg-vid.m-zoomOut{animation:bgZoomOut var(--bg-motion-dur) ease-in-out infinite alternate}
+.sbg-img.m-panL,.sbg-vid.m-panL{animation:bgPanL var(--bg-motion-dur) ease-in-out infinite alternate}
+.sbg-img.m-panR,.sbg-vid.m-panR{animation:bgPanR var(--bg-motion-dur) ease-in-out infinite alternate}
+.sbg-img.m-panU,.sbg-vid.m-panU{animation:bgPanU var(--bg-motion-dur) ease-in-out infinite alternate}
+.sbg-img.m-panD,.sbg-vid.m-panD{animation:bgPanD var(--bg-motion-dur) ease-in-out infinite alternate}
+.sbg-img.m-ken,.sbg-vid.m-ken{animation:bgKen var(--bg-motion-dur) ease-in-out infinite}
+.sbg-img.m-pulse,.sbg-vid.m-pulse{animation:bgPulse var(--bg-motion-dur) ease-in-out infinite}
+.sbg-img.m-wave,.sbg-vid.m-wave{animation:bgWave var(--bg-motion-dur) ease-in-out infinite}
 
-  /* ratio presets */
-  .ratio-16-9 { width: 100%; max-width: 720px; aspect-ratio: 16/9; }
-  .ratio-9-16 { width: 320px; aspect-ratio: 9/16; }
-  .ratio-1-1  { width: 420px; aspect-ratio: 1/1; }
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:1000;backdrop-filter:blur(4px)}
+.modal{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:26px;max-width:440px;width:90%}
+.modal h3{font-size:16px;margin-bottom:12px}
+.modal p{color:var(--text2);font-size:13px;line-height:1.6;margin-bottom:14px}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}
+.btn{padding:8px 18px;border-radius:8px;border:none;cursor:pointer;font-size:13px;font-weight:700}
+.btn-primary{background:var(--accent);color:white}
+.btn-ghost{background:var(--panel2);color:var(--text);border:1px solid var(--border)}
+.export-opt{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:12px;cursor:pointer;margin-bottom:10px;display:flex;align-items:center;gap:10px;transition:border-color .2s}
+.export-opt:hover{border-color:var(--accent2)}
+.export-opt.sel{border-color:var(--accent2)}
 
-  .stage-bg { position: absolute; inset: 0; }
-  .stage-content {
-    position: absolute; inset: 0;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    padding: 5%;
-    text-align: center;
-  }
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--panel2);border:1px solid var(--accent);color:var(--text);padding:10px 20px;border-radius:8px;font-size:12px;z-index:9999;animation:toastIn .3s ease,toastOut .3s ease 2.2s forwards;font-family:'Space Mono',monospace}
+@keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+@keyframes toastOut{to{opacity:0}}
 
-  .lyric-display {
-    transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
-    will-change: transform, opacity;
-    width: 100%;
-  }
+/* PROGRESS BADGE */
+.exp-prog{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--panel);border:1px solid var(--accent);border-radius:10px;padding:12px 20px;z-index:9999;font-family:'Space Mono',monospace;font-size:12px;color:var(--accent2);display:flex;align-items:center;gap:12px;box-shadow:0 8px 32px rgba(0,0,0,.5)}
+.exp-stop{background:var(--red);border:none;color:white;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:11px;margin-left:8px}
+.char{display:inline-block;animation-fill-mode:both}
 
-  .lyric-prev, .lyric-next {
-    opacity: 0;
-    pointer-events: none;
-    width: 100%;
-    display: none;
-  }
-
-  /* ===== STYLE PANEL ===== */
-  .style-panel {
-    background: var(--panel);
-    border-left: 1px solid var(--border);
-    overflow-y: auto;
-  }
-
-  .style-group { padding: 14px 16px; border-bottom: 1px solid var(--border); }
-  .style-group-title {
-    font-size: 10px;
-    letter-spacing: 2px;
-    color: var(--text2);
-    font-family: 'Space Mono', monospace;
-    margin-bottom: 12px;
-    text-transform: uppercase;
-  }
-
-  .control-row {
-    display: flex; align-items: center;
-    justify-content: space-between;
-    margin-bottom: 10px;
-  }
-  .control-label { font-size: 12px; color: var(--text2); }
-  .control-value { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--accent2); }
-
-  input[type=range] {
-    -webkit-appearance: none;
-    width: 120px; height: 3px;
-    background: var(--border);
-    border-radius: 2px;
-    outline: none;
-  }
-  input[type=range]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 14px; height: 14px;
-    background: var(--accent2);
-    border-radius: 50%;
-    cursor: pointer;
-  }
-
-  .color-row {
-    display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px;
-  }
-  .color-swatch {
-    width: 24px; height: 24px;
-    border-radius: 4px;
-    cursor: pointer;
-    border: 2px solid transparent;
-    transition: all 0.15s;
-  }
-  .color-swatch.active { border-color: white; transform: scale(1.2); }
-
-  .color-input-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-  .color-input-row label { font-size: 12px; color: var(--text2); flex: 1; }
-  input[type=color] { width: 32px; height: 24px; border: none; border-radius: 4px; cursor: pointer; background: none; }
-
-  select.style-select {
-    width: 100%;
-    background: var(--panel2);
-    border: 1px solid var(--border);
-    color: var(--text);
-    border-radius: 6px;
-    padding: 6px 8px;
-    font-size: 12px;
-    outline: none;
-    margin-bottom: 8px;
-    cursor: pointer;
-  }
-
-  .anim-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 4px; }
-  .anim-btn {
-    padding: 7px;
-    background: var(--panel2);
-    border: 1px solid var(--border);
-    color: var(--text2);
-    border-radius: 6px;
-    font-size: 11px;
-    cursor: pointer;
-    text-align: center;
-    transition: all 0.15s;
-  }
-  .anim-btn:hover, .anim-btn.active { background: rgba(124,58,237,0.2); border-color: var(--accent); color: var(--text); }
-
-  .bg-type-row { display: flex; gap: 6px; margin-bottom: 10px; }
-  .bg-type-btn {
-    flex: 1; padding: 6px;
-    background: var(--panel2);
-    border: 1px solid var(--border);
-    color: var(--text2);
-    border-radius: 6px;
-    font-size: 11px;
-    cursor: pointer;
-    transition: all 0.15s;
-    text-align: center;
-  }
-  .bg-type-btn.active { background: rgba(124,58,237,0.2); border-color: var(--accent); color: var(--text); }
-
-  .gradient-stops { display: flex; gap: 6px; align-items: center; margin-bottom: 8px; }
-
-  /* Export btn */
-  .export-btn {
-    margin: 16px;
-    width: calc(100% - 32px);
-    padding: 12px;
-    background: linear-gradient(135deg, #7c3aed, #06b6d4);
-    border: none;
-    border-radius: 10px;
-    color: white;
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
-    letter-spacing: 2px;
-    transition: opacity 0.2s, transform 0.1s;
-    font-family: 'Space Mono', monospace;
-  }
-  .export-btn:hover { opacity: 0.9; transform: scale(1.01); }
-  .export-btn:active { transform: scale(0.99); }
-
-  /* Scrollbar */
-  ::-webkit-scrollbar { width: 4px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-
-  /* Toast */
-  .toast {
-    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
-    background: var(--panel2);
-    border: 1px solid var(--accent);
-    color: var(--text);
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-size: 13px;
-    z-index: 9999;
-    animation: toastIn 0.3s ease, toastOut 0.3s ease 2.2s forwards;
-    font-family: 'Space Mono', monospace;
-    letter-spacing: 1px;
-  }
-  @keyframes toastIn { from { opacity:0; transform:translateX(-50%) translateY(10px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }
-  @keyframes toastOut { to { opacity:0; } }
-
-  /* Highlight current line */
-  .tc-item.current .tc-badge { background: var(--accent); color: white; border-color: var(--accent); }
-  .tc-item.current .tc-text { color: white; font-weight: 700; }
-
-  /* =============================================
-     ANIMATION KEYFRAMES — ENTER
-  ============================================= */
-  @keyframes fadeUp     { from{opacity:0;transform:translateY(40px)} to{opacity:1;transform:translateY(0)} }
-  @keyframes fadeDown   { from{opacity:0;transform:translateY(-40px)} to{opacity:1;transform:translateY(0)} }
-  @keyframes fadeIn     { from{opacity:0} to{opacity:1} }
-  @keyframes scaleIn    { from{opacity:0;transform:scale(0.5)} to{opacity:1;transform:scale(1)} }
-  @keyframes scaleInBig { from{opacity:0;transform:scale(1.6)} to{opacity:1;transform:scale(1)} }
-  @keyframes slideLeft  { from{opacity:0;transform:translateX(-80px)} to{opacity:1;transform:translateX(0)} }
-  @keyframes slideRight { from{opacity:0;transform:translateX(80px)} to{opacity:1;transform:translateX(0)} }
-  @keyframes slideUp2   { from{opacity:0;transform:translateY(100%)} to{opacity:1;transform:translateY(0)} }
-  @keyframes typewriter { from{clip-path:inset(0 100% 0 0)} to{clip-path:inset(0 0% 0 0)} }
-  @keyframes bounceIn   { 0%{opacity:0;transform:scale(0.2)} 55%{opacity:1;transform:scale(1.12)} 75%{transform:scale(0.94)} 90%{transform:scale(1.04)} 100%{transform:scale(1)} }
-  @keyframes spinIn     { from{opacity:0;transform:rotate(-200deg) scale(0.2)} to{opacity:1;transform:rotate(0) scale(1)} }
-  @keyframes blurIn     { from{opacity:0;filter:blur(30px);transform:scale(1.15)} to{opacity:1;filter:blur(0);transform:scale(1)} }
-  @keyframes flipInX    { from{opacity:0;transform:perspective(400px) rotateX(90deg)} to{opacity:1;transform:perspective(400px) rotateX(0)} }
-  @keyframes flipInY    { from{opacity:0;transform:perspective(400px) rotateY(90deg)} to{opacity:1;transform:perspective(400px) rotateY(0)} }
-  @keyframes skewLeft   { from{opacity:0;transform:skewX(-30deg) translateX(-60px)} to{opacity:1;transform:skewX(0) translateX(0)} }
-  @keyframes dropIn     { from{opacity:0;transform:translateY(-120%) rotate(-10deg)} to{opacity:1;transform:translateY(0) rotate(0)} }
-  @keyframes glitch1    { 0%,88%,100%{clip-path:inset(0);transform:translate(0)} 90%{clip-path:inset(15% 0 55% 0);transform:translate(-6px,2px);color:#0ff} 93%{clip-path:inset(65% 0 8% 0);transform:translate(6px,-2px);color:#f0f} 96%{clip-path:inset(35% 0 25% 0);transform:translate(-3px,1px)} }
-  @keyframes shake      { 0%,100%{transform:translateX(0)} 15%{transform:translateX(-10px) rotate(-2deg)} 35%{transform:translateX(10px) rotate(2deg)} 55%{transform:translateX(-8px)} 75%{transform:translateX(8px)} 90%{transform:translateX(-4px)} }
-  @keyframes rubberBand { 0%{transform:scale(1)} 15%{transform:scaleX(1.35) scaleY(0.75)} 35%{transform:scaleX(0.7) scaleY(1.25)} 55%{transform:scaleX(1.15) scaleY(0.9)} 75%{transform:scaleX(0.95) scaleY(1.05)} 100%{transform:scale(1)} }
-  @keyframes reveal     { from{clip-path:inset(0 0 100% 0)} to{clip-path:inset(0 0 0% 0)} }
-  @keyframes revealLR   { from{clip-path:inset(0 50% 0 50%)} to{clip-path:inset(0 0% 0 0%)} }
-  @keyframes lightSpeed { from{opacity:0;transform:translateX(100%) skewX(-30deg)} 55%{opacity:1;transform:translateX(-10px) skewX(4deg)} 75%{transform:translateX(5px) skewX(-2deg)} 100%{opacity:1;transform:translateX(0) skewX(0)} }
-
-  /* LOOP / CONTINUOUS */
-  @keyframes float      { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
-  @keyframes pulse      { 0%,100%{transform:scale(1)} 50%{transform:scale(1.06)} }
-  @keyframes neon       { 0%,100%{text-shadow:0 0 8px currentColor,0 0 25px currentColor,0 0 50px currentColor} 50%{text-shadow:0 0 20px currentColor,0 0 60px currentColor,0 0 110px currentColor,0 0 160px currentColor} }
-  @keyframes shimmer    { 0%{background-position:200% center} 100%{background-position:-200% center} }
-  @keyframes waveFloat  { 0%,100%{transform:translateY(0) rotate(-1deg)} 50%{transform:translateY(-10px) rotate(1deg)} }
-  @keyframes glitchLoop { 0%,92%,100%{transform:translate(0);clip-path:inset(0)} 93%{transform:translate(-5px,2px);clip-path:inset(20% 0 40% 0);color:#0ff} 95%{transform:translate(5px,-2px);clip-path:inset(60% 0 5% 0);color:#f0f} 97%{transform:translate(-2px,1px);clip-path:inset(40% 0 25% 0)} }
-  @keyframes charBounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
-  @keyframes charFall   { from{opacity:0;transform:translateY(-60px) rotate(var(--r,0deg))} to{opacity:1;transform:translateY(0) rotate(0deg)} }
-  @keyframes charWave   { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
-  @keyframes charFlip   { from{opacity:0;transform:rotateY(90deg)} to{opacity:1;transform:rotateY(0)} }
-  @keyframes charScale  { from{opacity:0;transform:scale(0)} to{opacity:1;transform:scale(1)} }
-  @keyframes charSlide  { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
-  @keyframes charGlitch { 0%,100%{transform:translate(0);opacity:1} 25%{transform:translate(-3px,1px);opacity:0.8;color:#0ff} 50%{transform:translate(3px,-1px);opacity:0.9;color:#f0f} 75%{transform:translate(-2px,2px);opacity:1} }
-
-  /* EXIT keyframes */
-  @keyframes exitFadeDown  { from{opacity:1;transform:translateY(0)}  to{opacity:0;transform:translateY(40px)} }
-  @keyframes exitFadeUp    { from{opacity:1;transform:translateY(0)}  to{opacity:0;transform:translateY(-40px)} }
-  @keyframes exitFadeOut   { from{opacity:1} to{opacity:0} }
-  @keyframes exitScaleOut  { from{opacity:1;transform:scale(1)} to{opacity:0;transform:scale(0.4)} }
-  @keyframes exitScaleBig  { from{opacity:1;transform:scale(1)} to{opacity:0;transform:scale(1.8)} }
-  @keyframes exitSlideLeft { from{opacity:1;transform:translateX(0)} to{opacity:0;transform:translateX(-100px)} }
-  @keyframes exitSlideRight{ from{opacity:1;transform:translateX(0)} to{opacity:0;transform:translateX(100px)} }
-  @keyframes exitBlur      { from{opacity:1;filter:blur(0)} to{opacity:0;filter:blur(30px)} }
-  @keyframes exitFlipOut   { from{opacity:1;transform:perspective(400px) rotateX(0)} to{opacity:0;transform:perspective(400px) rotateX(-90deg)} }
-  @keyframes exitReveal    { from{clip-path:inset(0 0 0% 0)} to{clip-path:inset(0 0 100% 0)} }
-  @keyframes exitShatter   { 0%{opacity:1;transform:scale(1);filter:blur(0)} 100%{opacity:0;transform:scale(2);filter:blur(10px)} }
-
-  /* =============================================
-     ENTER CLASS BINDINGS  (speed via CSS var)
-  ============================================= */
-  :root { --anim-dur: 0.5s; --loop-dur: 2s; }
-
-  .enter-fadeUp     .lyric-display { animation: fadeUp     var(--anim-dur) cubic-bezier(0.34,1.56,0.64,1) both; }
-  .enter-fadeDown   .lyric-display { animation: fadeDown   var(--anim-dur) cubic-bezier(0.34,1.56,0.64,1) both; }
-  .enter-fadeIn     .lyric-display { animation: fadeIn     var(--anim-dur) ease both; }
-  .enter-scaleIn    .lyric-display { animation: scaleIn    var(--anim-dur) cubic-bezier(0.34,1.56,0.64,1) both; }
-  .enter-scaleInBig .lyric-display { animation: scaleInBig var(--anim-dur) ease both; }
-  .enter-slideLeft  .lyric-display { animation: slideLeft  var(--anim-dur) cubic-bezier(0.25,0.46,0.45,0.94) both; }
-  .enter-slideRight .lyric-display { animation: slideRight var(--anim-dur) cubic-bezier(0.25,0.46,0.45,0.94) both; }
-  .enter-slideUp2   .lyric-display { animation: slideUp2   var(--anim-dur) cubic-bezier(0.25,0.46,0.45,0.94) both; }
-  .enter-typewriter .lyric-display { animation: typewriter var(--anim-dur) steps(24,end) both; }
-  .enter-bounceIn   .lyric-display { animation: bounceIn   var(--anim-dur) ease both; }
-  .enter-spinIn     .lyric-display { animation: spinIn     var(--anim-dur) ease both; }
-  .enter-blurIn     .lyric-display { animation: blurIn     var(--anim-dur) ease both; }
-  .enter-flipInX    .lyric-display { animation: flipInX    var(--anim-dur) ease both; }
-  .enter-flipInY    .lyric-display { animation: flipInY    var(--anim-dur) ease both; }
-  .enter-skewLeft   .lyric-display { animation: skewLeft   var(--anim-dur) ease both; }
-  .enter-dropIn     .lyric-display { animation: dropIn     var(--anim-dur) cubic-bezier(0.34,1.56,0.64,1) both; }
-  .enter-lightSpeed .lyric-display { animation: lightSpeed var(--anim-dur) ease-out both; }
-  .enter-reveal     .lyric-display { animation: reveal     var(--anim-dur) ease both; }
-  .enter-revealLR   .lyric-display { animation: revealLR   var(--anim-dur) ease both; }
-  .enter-glitch     .lyric-display { animation: glitch1    var(--anim-dur) ease both; }
-  .enter-shake      .lyric-display { animation: shake      var(--anim-dur) ease both; }
-  .enter-rubberBand .lyric-display { animation: rubberBand var(--anim-dur) ease both; }
-
-  /* LOOP enter types (continuous after appearing) */
-  .enter-float      .lyric-display { animation: float     var(--loop-dur) ease-in-out infinite; }
-  .enter-pulse      .lyric-display { animation: pulse     var(--loop-dur) ease-in-out infinite; }
-  .enter-neon       .lyric-display { animation: neon      var(--loop-dur) ease-in-out infinite; }
-  .enter-waveFloat  .lyric-display { animation: waveFloat var(--loop-dur) ease-in-out infinite; }
-  .enter-glitchLoop .lyric-display { animation: glitchLoop 3s linear infinite; }
-  .enter-shimmer    .lyric-display {
-    background: linear-gradient(90deg, var(--shimmer-c1,#fff) 20%, var(--shimmer-c2,#a855f7) 50%, var(--shimmer-c1,#fff) 80%);
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: shimmer 2.5s linear infinite;
-  }
-
-  /* EXIT CLASS BINDINGS */
-  .exit-fadeDown  .lyric-display.exiting { animation: exitFadeDown  0.4s ease both; }
-  .exit-fadeUp    .lyric-display.exiting { animation: exitFadeUp    0.4s ease both; }
-  .exit-fadeOut   .lyric-display.exiting { animation: exitFadeOut   0.35s ease both; }
-  .exit-scaleOut  .lyric-display.exiting { animation: exitScaleOut  0.35s ease both; }
-  .exit-scaleBig  .lyric-display.exiting { animation: exitScaleBig  0.35s ease both; }
-  .exit-slideLeft .lyric-display.exiting { animation: exitSlideLeft 0.35s ease both; }
-  .exit-slideRight.lyric-display.exiting { animation: exitSlideRight 0.35s ease both; }
-  .exit-blur      .lyric-display.exiting { animation: exitBlur      0.4s ease both; }
-  .exit-flipOut   .lyric-display.exiting { animation: exitFlipOut   0.4s ease both; }
-  .exit-reveal    .lyric-display.exiting { animation: exitReveal    0.4s ease both; }
-  .exit-shatter   .lyric-display.exiting { animation: exitShatter   0.5s ease both; }
-
-  /* =============================================
-     CHARACTER ANIMATION (.char-anim mode)
-  ============================================= */
-  .lyric-display .char {
-    display: inline-block;
-    animation-fill-mode: both;
-    animation-duration: var(--anim-dur);
-  }
-  /* char modes are applied via JS inline styles */
-
-  /* Animation panel tabs */
-  .anim-tab-row {
-    display: flex; gap: 0; margin-bottom: 12px;
-    border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
-  }
-  .anim-tab {
-    flex: 1; padding: 7px 4px; background: var(--panel2);
-    border: none; color: var(--text2); font-size: 10px;
-    cursor: pointer; transition: all 0.15s; text-align: center;
-    font-family: 'Space Mono', monospace; letter-spacing: 0.5px;
-  }
-  .anim-tab.active { background: var(--accent); color: white; }
-  .anim-tab-pane { display: none; }
-  .anim-tab-pane.visible { display: block; }
-
-  .anim-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; margin-bottom: 8px; }
-  .anim-btn {
-    padding: 7px 4px;
-    background: var(--panel2);
-    border: 1px solid var(--border);
-    color: var(--text2);
-    border-radius: 6px;
-    font-size: 10px;
-    cursor: pointer;
-    text-align: center;
-    transition: all 0.15s;
-    line-height: 1.3;
-  }
-  .anim-btn:hover, .anim-btn.active { background: rgba(124,58,237,0.25); border-color: var(--accent); color: var(--text); }
-
-  .speed-row { display: flex; align-items: center; gap: 8px; margin: 10px 0; }
-  .speed-btn {
-    flex: 1; padding: 5px; background: var(--panel2);
-    border: 1px solid var(--border); color: var(--text2);
-    border-radius: 6px; font-size: 10px; cursor: pointer;
-    transition: all 0.15s; text-align: center;
-    font-family: 'Space Mono', monospace;
-  }
-  .speed-btn.active { background: rgba(6,182,212,0.2); border-color: var(--accent3); color: var(--accent3); }
-
-  .preview-anim-btn {
-    width: 100%; padding: 8px; margin-top: 8px;
-    background: linear-gradient(135deg, rgba(124,58,237,0.3), rgba(6,182,212,0.3));
-    border: 1px solid var(--accent); border-radius: 8px;
-    color: var(--accent2); font-size: 11px; cursor: pointer;
-    font-family: 'Space Mono', monospace; letter-spacing: 1px;
-    transition: all 0.2s;
-  }
-  .preview-anim-btn:hover { background: linear-gradient(135deg, rgba(124,58,237,0.5), rgba(6,182,212,0.5)); }
-
-  /* Particle type labels */
-  .particle-type-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; margin-bottom: 8px; }
-  .pt-btn {
-    padding: 6px 4px;
-    background: var(--panel2);
-    border: 1px solid var(--border);
-    color: var(--text2);
-    border-radius: 6px;
-    font-size: 10px;
-    cursor: pointer;
-    text-align: center;
-    transition: all 0.15s;
-  }
-  .pt-btn:hover, .pt-btn.active { background: rgba(124,58,237,0.2); border-color: var(--accent); color: var(--text); }
-
-  .viz-bar {
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 60px;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    gap: 2px;
-    padding: 0 10%;
-    opacity: 0.4;
-    pointer-events: none;
-  }
-  .viz-bar-item {
-    flex: 1;
-    border-radius: 2px 2px 0 0;
-    transition: height 0.1s;
-  }
-
-  .modal-overlay {
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.7);
-    display: flex; align-items: center; justify-content: center;
-    z-index: 1000;
-    backdrop-filter: blur(4px);
-  }
-  .modal {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 28px;
-    max-width: 420px;
-    width: 90%;
-  }
-  .modal h3 { font-size: 16px; margin-bottom: 12px; }
-  .modal p { color: var(--text2); font-size: 13px; line-height: 1.6; margin-bottom: 16px; }
-  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
-  .btn { padding: 8px 18px; border-radius: 8px; border: none; cursor: pointer; font-size: 13px; font-weight: 700; }
-  .btn-primary { background: var(--accent); color: white; }
-  .btn-ghost { background: var(--panel2); color: var(--text); border: 1px solid var(--border); }
-
-  .tag-pill {
-    display: inline-block;
-    background: rgba(124,58,237,0.15);
-    border: 1px solid rgba(124,58,237,0.4);
-    border-radius: 20px;
-    padding: 2px 10px;
-    font-size: 10px;
-    color: var(--accent2);
-    font-family: 'Space Mono', monospace;
-    margin-left: 6px;
-  }
-
-  .visuals-toggle {
-    display: flex; gap: 6px; margin-bottom: 8px;
-  }
-  .vis-btn {
-    flex: 1; padding: 6px;
-    background: var(--panel2);
-    border: 1px solid var(--border);
-    color: var(--text2);
-    border-radius: 6px;
-    font-size: 10px;
-    cursor: pointer;
-    transition: all 0.15s;
-    text-align: center;
-  }
-  .vis-btn.active { background: rgba(124,58,237,0.2); border-color: var(--accent); color: var(--text); }
-
-  .waveform-overlay {
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 80px;
-    pointer-events: none;
-  }
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
 </style>
 </head>
 <body>
-
 <header>
   <div>
-    <div class="logo">LYRIC MOTION <span>LYRICS VIDEO CREATOR</span></div>
+    <div class="logo">LYRIC MOTION<span>LYRICS VIDEO CREATOR</span></div>
   </div>
-  <div class="header-actions">
-    <button onclick="showHelp()" style="background:var(--panel2);border:1px solid var(--border);color:var(--text2);border-radius:6px;padding:6px 14px;font-size:12px;cursor:pointer;">使い方</button>
-    <button onclick="exportVideo()" style="background:linear-gradient(135deg,var(--accent),var(--accent3));border:none;color:white;border-radius:6px;padding:6px 14px;font-size:12px;cursor:pointer;font-weight:700;letter-spacing:1px;">▶ EXPORT</button>
+  <div style="display:flex;gap:8px">
+    <button class="hbtn" onclick="showHelp()">使い方</button>
+    <button class="hbtn hbtn-primary" onclick="exportVideo()">▶ EXPORT</button>
   </div>
 </header>
 
 <div class="workspace">
+<!-- ===== LEFT PANEL ===== -->
+<div class="panel">
+  <div class="panel-title">INPUT <span class="tag-pill">STEP 1-3</span></div>
 
-  <!-- LEFT: Input Panel -->
-  <div class="panel" id="leftPanel">
-    <div class="panel-title">INPUT <span class="tag-pill">STEP 1-3</span></div>
-
-    <!-- Audio Upload -->
-    <div class="input-section">
-      <div class="section-label">① AUDIO FILE</div>
-      <div class="upload-zone" id="audioZone">
-        <input type="file" id="audioInput" accept="audio/*" onchange="handleAudioUpload(event)">
-        <div class="upload-icon">🎵</div>
-        <div class="upload-text"><b>クリックまたはドロップ</b><br>MP3 / WAV / OGG / M4A</div>
-      </div>
-      <div id="fileInfo" style="display:none" class="file-info">
-        <span class="fi-icon">🎧</span>
-        <div><div class="fi-name" id="fileName"></div><div class="fi-size" id="fileSize"></div></div>
-      </div>
-      <div id="audioPlayerWrap" style="display:none" class="audio-player">
-        <audio id="audioEl" style="display:none"></audio>
-        <div class="player-row">
+  <div class="input-section">
+    <div class="slabel">① AUDIO FILE</div>
+    <div class="upzone" id="audioZone">
+      <input type="file" id="audioInput" accept="audio/*" onchange="handleAudioUpload(event)">
+      <div style="font-size:26px;margin-bottom:6px">🎵</div>
+      <div style="font-size:13px;color:var(--text2)"><b style="color:var(--accent2)">クリックまたはドロップ</b><br>MP3 / WAV / OGG / M4A</div>
+    </div>
+    <div id="fileInfo" style="display:none" class="file-info">
+      <span style="font-size:20px">🎧</span>
+      <div><div id="fileName" style="font-size:12px;font-weight:700"></div><div id="fileSize" style="font-size:11px;color:var(--text2)"></div></div>
+    </div>
+    <div id="audioPlayerWrap" style="display:none">
+      <audio id="audioEl" style="display:none"></audio>
+      <div class="audio-player">
+        <div class="prow">
           <button class="play-btn" id="playBtn" onclick="togglePlay()">▶</button>
-          <div class="progress-bar" id="progressBar" onclick="seekAudio(event)">
-            <div class="progress-fill" id="progressFill" style="width:0%"></div>
+          <div class="progbar" id="progBar" onclick="seekAudio(event)">
+            <div class="progfill" id="progFill" style="width:0%"></div>
           </div>
-          <div class="time-display" id="timeDisplay">0:00 / 0:00</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Lyrics Input -->
-    <div class="input-section">
-      <div class="section-label">② 歌詞入力</div>
-      <textarea class="lyrics-area" id="lyricsInput" rows="8"
-        placeholder="歌詞を1行ずつ入力してください&#10;&#10;例：&#10;夜空に輝く星よ&#10;その光よ消えないで&#10;遠い記憶の中の&#10;あの日の笑顔が見える"
-        oninput="parseLyrics()"></textarea>
-    </div>
-
-    <!-- Timecode -->
-    <div class="input-section">
-      <div class="section-label">③ タイムコード設定</div>
-      <button class="btn-auto-parse" onclick="autoAssignTimecodes()">⚡ 均等タイムコード自動設定</button>
-      <div style="font-size:11px;color:var(--text2);margin-bottom:8px;">再生中に ⏱ をクリックして各行のタイミングを設定</div>
-    </div>
-
-    <div class="timecode-list" id="timecodeList"></div>
-  </div>
-
-  <!-- CENTER: Preview -->
-  <div class="preview-panel">
-    <div class="preview-toolbar">
-      <span class="preview-label">RATIO:</span>
-      <select id="ratioSelect" onchange="changeRatio(this.value)">
-        <option value="16-9">16:9 (横型)</option>
-        <option value="9-16">9:16 (縦型)</option>
-        <option value="1-1">1:1 (正方形)</option>
-      </select>
-      <span class="preview-label">| PREVIEW</span>
-      <button onclick="previewPlay()" style="margin-left:auto;">▶ プレビュー再生</button>
-    </div>
-    <div class="preview-stage-wrap">
-      <div class="preview-stage ratio-16-9" id="previewStage">
-        <div class="stage-bg" id="stageBg"></div>
-        <canvas class="waveform-overlay" id="waveCanvas"></canvas>
-        <div class="viz-bar" id="vizBar"></div>
-        <div class="stage-content" id="stageContent">
-          <div class="lyric-prev" id="lyricPrev"></div>
-          <div class="lyric-display" id="lyricCurrent" style="font-size:32px;font-weight:900;color:white;">
-            歌詞がここに表示されます
-          </div>
-          <div class="lyric-next" id="lyricNext"></div>
+          <div class="timedisp" id="timeDisp">0:00 / 0:00</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- RIGHT: Style Panel -->
-  <div class="style-panel" id="stylePanel">
-    <div class="panel-title">スタイル編集 <span class="tag-pill">DESIGN</span></div>
+  <div class="input-section">
+    <div class="slabel">② 歌詞入力</div>
+    <textarea class="la" id="lyricsInput" rows="8" placeholder="歌詞を1行ずつ入力&#10;&#10;例：&#10;夜空に輝く星よ&#10;その光よ消えないで" oninput="parseLyrics()"></textarea>
+  </div>
 
-    <!-- Background -->
-    <div class="style-group">
-      <div class="style-group-title">BACKGROUND</div>
-      <div class="bg-type-row">
-        <button class="bg-type-btn active" id="bgSolid" onclick="setBgType('solid')">ソリッド</button>
-        <button class="bg-type-btn" id="bgGrad" onclick="setBgType('gradient')">グラデ</button>
-        <button class="bg-type-btn" id="bgImage" onclick="setBgType('image')">画像</button>
-        <button class="bg-type-btn" id="bgParticle" onclick="setBgType('particle')">パーティクル</button>
-      </div>
-      <div id="bgSolidCtrl">
-        <div class="color-input-row">
-          <label>背景色</label>
-          <input type="color" id="bgColor" value="#0a0a0f" oninput="updateStyles()">
-        </div>
-      </div>
-      <div id="bgGradCtrl" style="display:none">
-        <div class="gradient-stops">
-          <input type="color" id="grad1" value="#1a0533" oninput="updateStyles()" style="flex:1;">
-          <span style="color:var(--text2);font-size:12px;">→</span>
-          <input type="color" id="grad2" value="#0a1628" oninput="updateStyles()" style="flex:1;">
-        </div>
-        <select class="style-select" id="gradDir" onchange="updateStyles()">
-          <option value="135deg">対角線（左上→右下）</option>
-          <option value="to right">横（左→右）</option>
-          <option value="to bottom">縦（上→下）</option>
-          <option value="45deg">斜め45°</option>
-        </select>
-      </div>
-      <div id="bgImageCtrl" style="display:none">
-        <div class="upload-zone" style="padding:14px;" onclick="document.getElementById('bgImageInput').click()">
-          <input type="file" id="bgImageInput" accept="image/*" style="display:none" onchange="handleBgImage(event)">
-          <div style="font-size:12px;color:var(--text2);">📷 背景画像を選択</div>
-        </div>
-        <div class="control-row" style="margin-top:8px;">
-          <span class="control-label">暗さ</span>
-          <input type="range" id="bgDim" min="0" max="90" value="50" oninput="updateStyles(); this.nextElementSibling.textContent=this.value+'%'">
-          <span class="control-value">50%</span>
-        </div>
-      </div>
-      <div id="bgParticleCtrl" style="display:none">
-        <div class="section-label" style="margin-bottom:6px;">パーティクルタイプ</div>
-        <div class="particle-type-grid" id="particleTypeGrid">
-          <div class="pt-btn active" onclick="setParticleType('dots',this)">✦ ドット</div>
-          <div class="pt-btn" onclick="setParticleType('stars',this)">★ スター</div>
-          <div class="pt-btn" onclick="setParticleType('snow',this)">❄ 雪</div>
-          <div class="pt-btn" onclick="setParticleType('fire',this)">🔥 火</div>
-          <div class="pt-btn" onclick="setParticleType('matrix',this)">▓ マトリクス</div>
-          <div class="pt-btn" onclick="setParticleType('bubbles',this)">○ バブル</div>
-          <div class="pt-btn" onclick="setParticleType('lines',this)">╱ ライン</div>
-          <div class="pt-btn" onclick="setParticleType('hearts',this)">♥ ハート</div>
-          <div class="pt-btn" onclick="setParticleType('sparks',this)">✺ 花火</div>
-        </div>
-        <div class="color-input-row" style="margin-top:4px;">
-          <label>パーティクル色</label>
-          <input type="color" id="particleColor" value="#7c3aed" oninput="restartParticles()">
-        </div>
-        <div class="control-row">
-          <span class="control-label">背景色</span>
-          <input type="color" id="particleBgColor" value="#000000" oninput="updateStyles()">
-        </div>
-        <div class="control-row">
-          <span class="control-label">密度</span>
-          <input type="range" id="particleDensity" min="20" max="200" value="60" oninput="restartParticles(); this.nextElementSibling.textContent=this.value">
-          <span class="control-value">60</span>
-        </div>
-        <div class="control-row">
-          <span class="control-label">速度</span>
-          <input type="range" id="particleSpeed" min="1" max="10" value="3" step="0.5" oninput="this.nextElementSibling.textContent=this.value">
-          <span class="control-value">3</span>
-        </div>
-      </div>
-    </div>
+  <div class="input-section">
+    <div class="slabel">③ タイムコード設定</div>
+    <button class="btn-auto" onclick="autoTimecodes()">⚡ 均等タイムコード自動設定</button>
+    <div style="font-size:11px;color:var(--text2)">再生中に ⏱ をクリックして各行のタイミングを設定</div>
+  </div>
 
-    <!-- Typography -->
-    <div class="style-group">
-      <div class="style-group-title">TYPOGRAPHY</div>
-      <div class="section-label" style="margin-bottom:6px;">フォント</div>
-      <select class="style-select" id="fontFamily" onchange="updateStyles()">
-        <option value="'Noto Sans JP', sans-serif">Noto Sans JP（標準）</option>
-        <option value="'Bebas Neue', cursive">Bebas Neue（インパクト）</option>
-        <option value="'Space Mono', monospace">Space Mono（モノスペース）</option>
-        <option value="'Georgia', serif">Georgia（セリフ）</option>
-        <option value="serif">明朝体</option>
-        <option value="'cursive'">筆記体</option>
-      </select>
-      <div class="control-row">
-        <span class="control-label">メインサイズ</span>
-        <input type="range" id="fontSize" min="16" max="80" value="32" oninput="updateStyles(); this.nextElementSibling.textContent=this.value+'px'">
-        <span class="control-value">32px</span>
-      </div>
-      <div class="control-row">
-        <span class="control-label">行間</span>
-        <input type="range" id="lineHeight" min="1" max="2.5" step="0.1" value="1.4" oninput="updateStyles(); this.nextElementSibling.textContent=this.value">
-        <span class="control-value">1.4</span>
-      </div>
-      <div class="control-row">
-        <span class="control-label">字間</span>
-        <input type="range" id="letterSpacing" min="-2" max="20" step="0.5" value="0" oninput="updateStyles(); this.nextElementSibling.textContent=this.value+'px'">
-        <span class="control-value">0px</span>
-      </div>
-      <div class="color-input-row">
-        <label>文字色</label>
-        <input type="color" id="textColor" value="#ffffff" oninput="updateStyles()">
-      </div>
-      <input type="hidden" id="subTextColor" value="#888888">
-      <div class="section-label" style="margin-bottom:6px;">太さ</div>
-      <select class="style-select" id="fontWeight" onchange="updateStyles()">
-        <option value="400">Regular</option>
-        <option value="700">Bold</option>
-        <option value="900" selected>Black (900)</option>
-      </select>
-      <div class="section-label" style="margin-bottom:6px;">配置</div>
-      <select class="style-select" id="textAlign" onchange="updateStyles()">
-        <option value="center">中央揃え</option>
-        <option value="left">左揃え</option>
-        <option value="right">右揃え</option>
-      </select>
-    </div>
+  <div class="tclist" id="tcList"></div>
+</div>
 
-    <!-- Text Effects -->
-    <div class="style-group">
-      <div class="style-group-title">TEXT EFFECTS</div>
-      <div class="color-input-row">
-        <label>テキストシャドウ色</label>
-        <input type="color" id="shadowColor" value="#7c3aed" oninput="updateStyles()">
+<!-- ===== CENTER PREVIEW ===== -->
+<div class="preview-panel">
+  <div class="prev-toolbar">
+    <span class="plabel">RATIO:</span>
+    <select id="ratioSel" onchange="changeRatio(this.value)">
+      <option value="169">16:9 横型</option>
+      <option value="916">9:16 縦型</option>
+      <option value="11">1:1 正方形</option>
+    </select>
+    <button onclick="previewPlay()" style="margin-left:auto">▶ プレビュー再生</button>
+  </div>
+  <div class="stage-wrap">
+    <div class="stage r169" id="stage">
+      <div class="sbg" id="stageBg"></div>
+      <canvas class="wcanvas" id="wcanvas"></canvas>
+      <div class="vizbar" id="vizbar"></div>
+      <div class="scontent" id="scontent">
+        <div class="lprev" id="lprev"></div>
+        <div class="ldisp" id="lcur" style="font-size:32px;font-weight:900;color:white">歌詞がここに表示されます</div>
+        <div class="lnext" id="lnext"></div>
       </div>
-      <div class="control-row">
-        <span class="control-label">シャドウ強度</span>
-        <input type="range" id="shadowBlur" min="0" max="60" value="20" oninput="updateStyles(); this.nextElementSibling.textContent=this.value+'px'">
-        <span class="control-value">20px</span>
-      </div>
-      <div class="color-input-row">
-        <label>ストローク（枠線）</label>
-        <input type="color" id="strokeColor" value="#000000" oninput="updateStyles()">
-      </div>
-      <div class="control-row">
-        <span class="control-label">ストローク幅</span>
-        <input type="range" id="strokeWidth" min="0" max="8" value="0" step="0.5" oninput="updateStyles(); this.nextElementSibling.textContent=this.value+'px'">
-        <span class="control-value">0px</span>
-      </div>
-      <div class="section-label" style="margin-bottom:6px;">グラデーション文字</div>
-      <div class="color-row">
-        <div class="color-swatch active" style="background:none;border-color:var(--text2);color:var(--text2);font-size:9px;display:flex;align-items:center;justify-content:center;" onclick="setTextGrad('none')" title="なし">OFF</div>
-        <div class="color-swatch" style="background:linear-gradient(90deg,#fff,#aaa)" onclick="setTextGrad('white')"></div>
-        <div class="color-swatch" style="background:linear-gradient(90deg,#a855f7,#06b6d4)" onclick="setTextGrad('purple-cyan')"></div>
-        <div class="color-swatch" style="background:linear-gradient(90deg,#f59e0b,#ef4444)" onclick="setTextGrad('gold-red')"></div>
-        <div class="color-swatch" style="background:linear-gradient(90deg,#22c55e,#06b6d4)" onclick="setTextGrad('green-cyan')"></div>
-        <div class="color-swatch" style="background:linear-gradient(90deg,#ec4899,#f59e0b)" onclick="setTextGrad('pink-gold')"></div>
-      </div>
-    </div>
-
-    <!-- Animation Mega Panel -->
-    <div class="style-group">
-      <div class="style-group-title">🎬 ANIMATION</div>
-
-      <!-- Tabs -->
-      <div class="anim-tab-row">
-        <button class="anim-tab active" onclick="switchAnimTab('enter',this)">登場</button>
-        <button class="anim-tab" onclick="switchAnimTab('exit',this)">退場</button>
-        <button class="anim-tab" onclick="switchAnimTab('char',this)">文字</button>
-        <button class="anim-tab" onclick="switchAnimTab('loop',this)">ループ</button>
-        <button class="anim-tab" onclick="switchAnimTab('speed',this)">速度</button>
-      </div>
-
-      <!-- ENTER TAB -->
-      <div class="anim-tab-pane visible" id="tab-enter">
-        <div style="font-size:10px;color:var(--text2);margin-bottom:8px;">歌詞が登場するときのアニメーション</div>
-        <div class="anim-grid-3" id="animGrid">
-          <div class="anim-btn active" onclick="setAnim('fadeUp',this)">↑<br>フェード<br>アップ</div>
-          <div class="anim-btn" onclick="setAnim('fadeDown',this)">↓<br>フェード<br>ダウン</div>
-          <div class="anim-btn" onclick="setAnim('fadeIn',this)">◎<br>フェード<br>イン</div>
-          <div class="anim-btn" onclick="setAnim('blurIn',this)">◈<br>ブラー<br>イン</div>
-          <div class="anim-btn" onclick="setAnim('scaleIn',this)">⊕<br>ズーム<br>イン</div>
-          <div class="anim-btn" onclick="setAnim('scaleInBig',this)">⊖<br>ズーム<br>アウト</div>
-          <div class="anim-btn" onclick="setAnim('slideLeft',this)">←<br>スライド<br>左</div>
-          <div class="anim-btn" onclick="setAnim('slideRight',this)">→<br>スライド<br>右</div>
-          <div class="anim-btn" onclick="setAnim('slideUp2',this)">⬆<br>スライド<br>下から</div>
-          <div class="anim-btn" onclick="setAnim('bounceIn',this)">⤻<br>バウンス</div>
-          <div class="anim-btn" onclick="setAnim('spinIn',this)">↻<br>スピン</div>
-          <div class="anim-btn" onclick="setAnim('flipInX',this)">↕<br>フリップ<br>X</div>
-          <div class="anim-btn" onclick="setAnim('flipInY',this)">↔<br>フリップ<br>Y</div>
-          <div class="anim-btn" onclick="setAnim('typewriter',this)">▌<br>タイプ<br>ライター</div>
-          <div class="anim-btn" onclick="setAnim('dropIn',this)">⬇<br>ドロップ<br>イン</div>
-          <div class="anim-btn" onclick="setAnim('lightSpeed',this)">⚡<br>ライト<br>スピード</div>
-          <div class="anim-btn" onclick="setAnim('reveal',this)">▬<br>リビール<br>下から</div>
-          <div class="anim-btn" onclick="setAnim('revealLR',this)">◀▶<br>リビール<br>中央から</div>
-          <div class="anim-btn" onclick="setAnim('skewLeft',this)">╱<br>スキュー</div>
-          <div class="anim-btn" onclick="setAnim('glitch',this)">⚡<br>グリッチ</div>
-          <div class="anim-btn" onclick="setAnim('shake',this)">↯<br>シェイク</div>
-          <div class="anim-btn" onclick="setAnim('rubberBand',this)">〰<br>ラバー<br>バンド</div>
-        </div>
-        <button class="preview-anim-btn" onclick="previewCurrentAnim()">▶ 登場アニメ プレビュー</button>
-      </div>
-
-      <!-- EXIT TAB -->
-      <div class="anim-tab-pane" id="tab-exit">
-        <div style="font-size:10px;color:var(--text2);margin-bottom:8px;">歌詞が消えるときのアニメーション</div>
-        <div class="anim-grid-3" id="exitAnimGrid">
-          <div class="anim-btn active" onclick="setExitAnim('fadeOut',this)">◎<br>フェード<br>アウト</div>
-          <div class="anim-btn" onclick="setExitAnim('fadeDown',this)">↓<br>フェード<br>ダウン</div>
-          <div class="anim-btn" onclick="setExitAnim('fadeUp',this)">↑<br>フェード<br>アップ</div>
-          <div class="anim-btn" onclick="setExitAnim('scaleOut',this)">⊖<br>ズーム<br>アウト</div>
-          <div class="anim-btn" onclick="setExitAnim('scaleBig',this)">⊕<br>スケール<br>拡大</div>
-          <div class="anim-btn" onclick="setExitAnim('slideLeft',this)">←<br>スライド<br>左</div>
-          <div class="anim-btn" onclick="setExitAnim('slideRight',this)">→<br>スライド<br>右</div>
-          <div class="anim-btn" onclick="setExitAnim('blur',this)">◈<br>ブラー<br>アウト</div>
-          <div class="anim-btn" onclick="setExitAnim('flipOut',this)">↕<br>フリップ<br>アウト</div>
-          <div class="anim-btn" onclick="setExitAnim('reveal',this)">▬<br>リビール<br>クローズ</div>
-          <div class="anim-btn" onclick="setExitAnim('shatter',this)">💥<br>シャッター</div>
-        </div>
-        <div class="section-label" style="margin:10px 0 6px;">最後の行の消えるタイミング</div>
-        <select class="style-select" id="lastLineFadeMode">
-          <option value="never">消えない（曲終了まで）</option>
-          <option value="2">曲終了の2秒前</option>
-          <option value="5">曲終了の5秒前</option>
-          <option value="10">曲終了の10秒前</option>
-        </select>
-        <button class="preview-anim-btn" onclick="previewExitAnim()">▶ 退場アニメ プレビュー</button>
-      </div>
-
-      <!-- CHAR TAB -->
-      <div class="anim-tab-pane" id="tab-char">
-        <div style="font-size:10px;color:var(--text2);margin-bottom:8px;">文字を1文字ずつアニメーション</div>
-        <div class="anim-grid-3" id="charAnimGrid">
-          <div class="anim-btn active" onclick="setCharAnim('none',this)">OFF<br>一括</div>
-          <div class="anim-btn" onclick="setCharAnim('charFall',this)">⬇<br>落下</div>
-          <div class="anim-btn" onclick="setCharAnim('charSlide',this)">↑<br>スライド</div>
-          <div class="anim-btn" onclick="setCharAnim('charScale',this)">⊕<br>スケール</div>
-          <div class="anim-btn" onclick="setCharAnim('charFlip',this)">↔<br>フリップ</div>
-          <div class="anim-btn" onclick="setCharAnim('charGlitch',this)">⚡<br>グリッチ</div>
-          <div class="anim-btn" onclick="setCharAnim('charBounce',this)">〜<br>バウンス<br>（ループ）</div>
-          <div class="anim-btn" onclick="setCharAnim('charWave',this)">🌊<br>ウェーブ<br>（ループ）</div>
-        </div>
-        <div class="control-row" style="margin-top:10px;">
-          <span class="control-label">文字間ディレイ</span>
-          <input type="range" id="charDelay" min="10" max="200" value="50" oninput="this.nextElementSibling.textContent=this.value+'ms'">
-          <span class="control-value">50ms</span>
-        </div>
-        <button class="preview-anim-btn" onclick="previewCurrentAnim()">▶ 文字アニメ プレビュー</button>
-      </div>
-
-      <!-- LOOP TAB -->
-      <div class="anim-tab-pane" id="tab-loop">
-        <div style="font-size:10px;color:var(--text2);margin-bottom:8px;">表示中にずっとループするエフェクト<br>（登場アニメと組み合わせ不可）</div>
-        <div class="anim-grid-3" id="loopAnimGrid">
-          <div class="anim-btn active" onclick="setLoopAnim('none',this)">OFF</div>
-          <div class="anim-btn" onclick="setLoopAnim('float',this)">🌊<br>フロート</div>
-          <div class="anim-btn" onclick="setLoopAnim('pulse',this)">💓<br>パルス</div>
-          <div class="anim-btn" onclick="setLoopAnim('neon',this)">✦<br>ネオン<br>フリッカー</div>
-          <div class="anim-btn" onclick="setLoopAnim('waveFloat',this)">〜<br>ウェーブ<br>フロート</div>
-          <div class="anim-btn" onclick="setLoopAnim('glitchLoop',this)">⚡<br>グリッチ<br>ループ</div>
-          <div class="anim-btn" onclick="setLoopAnim('shimmer',this)">✨<br>シマー<br>グラデ</div>
-        </div>
-      </div>
-
-      <!-- SPEED TAB -->
-      <div class="anim-tab-pane" id="tab-speed">
-        <div style="font-size:10px;color:var(--text2);margin-bottom:10px;">登場・退場アニメーションの速さ</div>
-        <div class="speed-row" id="speedRow">
-          <button class="speed-btn" onclick="setAnimSpeed(0.2,this)">0.2×<br>超速</button>
-          <button class="speed-btn" onclick="setAnimSpeed(0.4,this)">0.4×<br>速い</button>
-          <button class="speed-btn active" onclick="setAnimSpeed(1,this)">1×<br>標準</button>
-          <button class="speed-btn" onclick="setAnimSpeed(1.8,this)">1.8×<br>遅め</button>
-          <button class="speed-btn" onclick="setAnimSpeed(3,this)">3×<br>スロー</button>
-        </div>
-        <div class="control-row" style="margin-top:10px;">
-          <span class="control-label">カスタム速度</span>
-          <input type="range" id="animSpeedSlider" min="0.1" max="4" step="0.1" value="0.5"
-            oninput="setAnimSpeedCustom(this.value); this.nextElementSibling.textContent=this.value+'s'">
-          <span class="control-value">0.5s</span>
-        </div>
-        <div style="font-size:10px;color:var(--text2);margin:10px 0 6px;">ループアニメの速さ</div>
-        <div class="control-row">
-          <span class="control-label">ループ周期</span>
-          <input type="range" id="loopSpeedSlider" min="0.5" max="6" step="0.1" value="2"
-            oninput="setLoopSpeed(this.value); this.nextElementSibling.textContent=this.value+'s'">
-          <span class="control-value">2s</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Visualizer -->
-    <div class="style-group">
-      <div class="style-group-title">VISUALIZER</div>
-      <div class="visuals-toggle">
-        <button class="vis-btn active" id="visNone" onclick="setVisualizer('none')">なし</button>
-        <button class="vis-btn" id="visBar" onclick="setVisualizer('bar')">バー</button>
-        <button class="vis-btn" id="visWave" onclick="setVisualizer('wave')">波形</button>
-        <button class="vis-btn" id="visCircle" onclick="setVisualizer('circle')">円形</button>
-      </div>
-      <div class="color-input-row">
-        <label>ビジュアライザー色</label>
-        <input type="color" id="vizColor" value="#7c3aed" oninput="updateStyles()">
-      </div>
-    </div>
-
-    <!-- Overlays -->
-    <div class="style-group">
-      <div class="style-group-title">OVERLAY</div>
-      <div class="color-input-row">
-        <label>オーバーレイ色</label>
-        <input type="color" id="overlayColor" value="#000000" oninput="updateStyles()">
-      </div>
-      <div class="control-row">
-        <span class="control-label">オーバーレイ透明度</span>
-        <input type="range" id="overlayOpacity" min="0" max="80" value="0" oninput="updateStyles(); this.nextElementSibling.textContent=this.value+'%'">
-        <span class="control-value">0%</span>
-      </div>
-    </div>
-
-    <button class="export-btn" onclick="exportVideo()">EXPORT VIDEO</button>
-    <div style="padding:0 16px 20px;text-align:center;font-size:10px;color:var(--text2);line-height:1.6;">
-      エクスポートはCanvas録画 + MediaRecorder APIを使用。<br>モダンブラウザ（Chrome推奨）で動作します。
     </div>
   </div>
 </div>
 
+<!-- ===== RIGHT STYLE PANEL ===== -->
+<div class="style-panel">
+  <div class="panel-title">スタイル編集 <span class="tag-pill">DESIGN</span></div>
+
+  <!-- BG -->
+  <div class="style-group">
+    <div class="sgt">BACKGROUND</div>
+    <div class="bg-type-row">
+      <button class="bgtbtn active" id="bt-solid" onclick="setBgType('solid',this)">ソリッド</button>
+      <button class="bgtbtn" id="bt-gradient" onclick="setBgType('gradient',this)">グラデ</button>
+      <button class="bgtbtn" id="bt-media" onclick="setBgType('media',this)">📂 メディア</button>
+      <button class="bgtbtn" id="bt-particle" onclick="setBgType('particle',this)">パーティクル</button>
+    </div>
+
+    <!-- Solid -->
+    <div id="ctrl-solid">
+      <div class="color-row"><label>背景色</label><input type="color" id="bgColor" value="#0a0a0f" oninput="applyBg()"></div>
+    </div>
+
+    <!-- Gradient -->
+    <div id="ctrl-gradient" style="display:none">
+      <div class="grad-stops">
+        <input type="color" id="grad1" value="#1a0533" oninput="applyBg()" style="flex:1">
+        <span style="color:var(--text2);font-size:12px">→</span>
+        <input type="color" id="grad2" value="#0a1628" oninput="applyBg()" style="flex:1">
+      </div>
+      <select class="ss" id="gradDir" onchange="applyBg()">
+        <option value="135deg">対角線</option>
+        <option value="to right">横</option>
+        <option value="to bottom">縦</option>
+        <option value="45deg">斜め45°</option>
+      </select>
+    </div>
+
+    <!-- Media layers -->
+    <div id="ctrl-media" style="display:none">
+      <div style="display:flex;gap:6px;margin-bottom:8px">
+        <button class="ml-add" onclick="document.getElementById('imgInput').click()">📷 画像</button>
+        <button class="ml-add" onclick="document.getElementById('vidInput').click()">🎬 動画</button>
+        <button class="ml-add" onclick="clearLayers()" style="flex:0;padding:8px 10px">🗑</button>
+      </div>
+      <input type="file" id="imgInput" accept="image/*" multiple style="display:none" onchange="addLayers(event,'image')">
+      <input type="file" id="vidInput" accept="video/*" multiple style="display:none" onchange="addLayers(event,'video')">
+      <div style="font-size:10px;color:var(--text2);margin-bottom:8px;text-align:center">↕ ドラッグで並び替え · 複数同時追加対応</div>
+      <div id="layerList" style="display:flex;flex-direction:column;gap:5px;margin-bottom:8px;min-height:60px">
+        <div class="empty-msg">📷 画像 / 🎬 動画を追加してください</div>
+      </div>
+      <div id="layerEditor" style="display:none;border-top:1px solid var(--border);padding-top:10px;margin-top:4px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <div class="slabel" style="margin:0">📝 レイヤー設定</div>
+          <span id="edLayerName" style="font-size:10px;color:var(--accent2);font-family:'Space Mono',monospace;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
+        </div>
+        <div class="slabel">切替トランジション</div>
+        <select class="ss" id="lyrTrans" onchange="updateLayer('transition',this.value)">
+          <option value="cut">✂ カット</option>
+          <option value="fade" selected>◎ フェード</option>
+          <option value="dissolve">✨ ディゾルブ</option>
+          <option value="slide-left">← スライド左</option>
+          <option value="slide-right">→ スライド右</option>
+          <option value="zoom">⊕ ズーム</option>
+          <option value="wipe-down">↓ ワイプ</option>
+        </select>
+        <button class="pbtn" onclick="previewTrans()">▶ トランジションをプレビュー</button>
+        <div class="slabel">表示時間</div>
+        <select class="ss" id="lyrDurMode" onchange="updateLayer('durationMode',this.value);toggleDurInput(this.value)">
+          <option value="equal">均等分割</option>
+          <option value="fixed">固定秒数</option>
+          <option value="loop">ループ（動画）</option>
+        </select>
+        <div id="durInput" style="display:none;margin-bottom:8px">
+          <div class="ctrl-row">
+            <span class="ctrl-label">秒数</span>
+            <input type="range" id="lyrDurSec" min="1" max="60" value="10" oninput="updateLayer('durationSec',this.value);this.nextElementSibling.textContent=this.value+'s'">
+            <span class="ctrl-val">10s</span>
+          </div>
+        </div>
+        <div class="ctrl-row"><span class="ctrl-label">暗さ</span><input type="range" id="lyrDim" min="0" max="90" value="40" oninput="updateLayer('dim',this.value);this.nextElementSibling.textContent=this.value+'%'"><span class="ctrl-val">40%</span></div>
+        <div class="ctrl-row"><span class="ctrl-label">ぼかし</span><input type="range" id="lyrBlur" min="0" max="20" value="0" oninput="updateLayer('blur',this.value);this.nextElementSibling.textContent=this.value+'px'"><span class="ctrl-val">0px</span></div>
+        <div class="ctrl-row"><span class="ctrl-label">不透明度</span><input type="range" id="lyrOpac" min="10" max="100" value="100" oninput="updateLayer('opacity',this.value);this.nextElementSibling.textContent=this.value+'%'"><span class="ctrl-val">100%</span></div>
+        <div class="slabel" style="margin-top:6px">🎥 モーション</div>
+        <div class="grid3" id="motionGrid">
+          <div class="abtn active" data-m="none" onclick="updateLayer('motion','none');selMotion(this)">OFF</div>
+          <div class="abtn" data-m="zoomIn" onclick="updateLayer('motion','zoomIn');selMotion(this)">🔍ズームイン</div>
+          <div class="abtn" data-m="zoomOut" onclick="updateLayer('motion','zoomOut');selMotion(this)">🔎ズームアウト</div>
+          <div class="abtn" data-m="panL" onclick="updateLayer('motion','panL');selMotion(this)">←パン左</div>
+          <div class="abtn" data-m="panR" onclick="updateLayer('motion','panR');selMotion(this)">→パン右</div>
+          <div class="abtn" data-m="panU" onclick="updateLayer('motion','panU');selMotion(this)">↑パン上</div>
+          <div class="abtn" data-m="panD" onclick="updateLayer('motion','panD');selMotion(this)">↓パン下</div>
+          <div class="abtn" data-m="ken" onclick="updateLayer('motion','ken');selMotion(this)">🎬ケンバーンズ</div>
+          <div class="abtn" data-m="pulse" onclick="updateLayer('motion','pulse');selMotion(this)">💓パルス</div>
+          <div class="abtn" data-m="wave" onclick="updateLayer('motion','wave');selMotion(this)">〜ウェーブ</div>
+        </div>
+        <div class="ctrl-row"><span class="ctrl-label">モーション速度</span><input type="range" id="lyrMotSpd" min="0.1" max="3" step="0.1" value="1" oninput="updateLayer('motionSpeed',this.value);this.nextElementSibling.textContent=this.value+'×'"><span class="ctrl-val">1×</span></div>
+      </div>
+      <div style="border-top:1px solid var(--border);padding-top:10px;margin-top:6px">
+        <div class="slabel">再生設定</div>
+        <select class="ss" id="playMode" onchange="restartBgLoop()">
+          <option value="sequence">順番に切替</option>
+          <option value="random">ランダム</option>
+        </select>
+        <div style="display:flex;gap:6px;margin-top:6px">
+          <button class="ml-add" onclick="prevLayer()">◀ 前へ</button>
+          <button class="ml-add" onclick="nextLayer()">次へ ▶</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Particle -->
+    <div id="ctrl-particle" style="display:none">
+      <div class="ptype-grid" id="ptypeGrid">
+        <div class="ptbtn active" onclick="setPType('dots',this)">✦ ドット</div>
+        <div class="ptbtn" onclick="setPType('stars',this)">★ スター</div>
+        <div class="ptbtn" onclick="setPType('snow',this)">❄ 雪</div>
+        <div class="ptbtn" onclick="setPType('fire',this)">🔥 火</div>
+        <div class="ptbtn" onclick="setPType('bubbles',this)">○ バブル</div>
+        <div class="ptbtn" onclick="setPType('sparks',this)">✺ 花火</div>
+      </div>
+      <div class="color-row"><label>パーティクル色</label><input type="color" id="ptColor" value="#7c3aed" oninput="restartParticles()"></div>
+      <div class="color-row"><label>背景色</label><input type="color" id="ptBgColor" value="#000000" oninput="applyBg()"></div>
+      <div class="ctrl-row"><span class="ctrl-label">密度</span><input type="range" id="ptDensity" min="20" max="200" value="60" oninput="restartParticles();this.nextElementSibling.textContent=this.value"><span class="ctrl-val">60</span></div>
+    </div>
+  </div>
+
+  <!-- Typography -->
+  <div class="style-group">
+    <div class="sgt">TYPOGRAPHY</div>
+    <div class="slabel">フォント</div>
+    <select class="ss" id="fontFam" onchange="applyText()">
+      <option value="'Noto Sans JP',sans-serif">Noto Sans JP（標準）</option>
+      <option value="'Bebas Neue',cursive">Bebas Neue（インパクト）</option>
+      <option value="'Space Mono',monospace">Space Mono（モノスペース）</option>
+      <option value="Georgia,serif">Georgia（セリフ）</option>
+      <option value="serif">明朝体</option>
+    </select>
+    <div class="ctrl-row"><span class="ctrl-label">メインサイズ</span><input type="range" id="fontSize" min="16" max="80" value="32" oninput="applyText();this.nextElementSibling.textContent=this.value+'px'"><span class="ctrl-val">32px</span></div>
+    <div class="ctrl-row"><span class="ctrl-label">行間</span><input type="range" id="lineH" min="1" max="2.5" step="0.1" value="1.4" oninput="applyText();this.nextElementSibling.textContent=this.value"><span class="ctrl-val">1.4</span></div>
+    <div class="ctrl-row"><span class="ctrl-label">字間</span><input type="range" id="letterSp" min="-2" max="20" step="0.5" value="0" oninput="applyText();this.nextElementSibling.textContent=this.value+'px'"><span class="ctrl-val">0px</span></div>
+    <div class="color-row"><label>文字色</label><input type="color" id="textColor" value="#ffffff" oninput="applyText()"></div>
+    <div class="slabel">太さ</div>
+    <select class="ss" id="fontW" onchange="applyText()">
+      <option value="400">Regular</option><option value="700">Bold</option><option value="900" selected>Black</option>
+    </select>
+    <div class="slabel">配置</div>
+    <select class="ss" id="textAlign" onchange="applyText()">
+      <option value="center">中央揃え</option><option value="left">左揃え</option><option value="right">右揃え</option>
+    </select>
+  </div>
+
+  <!-- Text Effects -->
+  <div class="style-group">
+    <div class="sgt">TEXT EFFECTS</div>
+    <div class="color-row"><label>シャドウ色</label><input type="color" id="shadowColor" value="#7c3aed" oninput="applyText()"></div>
+    <div class="ctrl-row"><span class="ctrl-label">シャドウ強度</span><input type="range" id="shadowBlur" min="0" max="60" value="20" oninput="applyText();this.nextElementSibling.textContent=this.value+'px'"><span class="ctrl-val">20px</span></div>
+    <div class="color-row"><label>ストローク色</label><input type="color" id="strokeColor" value="#000000" oninput="applyText()"></div>
+    <div class="ctrl-row"><span class="ctrl-label">ストローク幅</span><input type="range" id="strokeW" min="0" max="8" value="0" step="0.5" oninput="applyText();this.nextElementSibling.textContent=this.value+'px'"><span class="ctrl-val">0px</span></div>
+    <div class="slabel">グラデーション文字</div>
+    <div class="swatch-row">
+      <div class="swatch active" style="background:none;border:1px solid var(--text2);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text2)" onclick="setGrad('none',this)">OFF</div>
+      <div class="swatch" style="background:linear-gradient(90deg,#fff,#aaa)" onclick="setGrad('white',this)"></div>
+      <div class="swatch" style="background:linear-gradient(90deg,#a855f7,#06b6d4)" onclick="setGrad('pc',this)"></div>
+      <div class="swatch" style="background:linear-gradient(90deg,#f59e0b,#ef4444)" onclick="setGrad('gr',this)"></div>
+      <div class="swatch" style="background:linear-gradient(90deg,#22c55e,#06b6d4)" onclick="setGrad('gc',this)"></div>
+      <div class="swatch" style="background:linear-gradient(90deg,#ec4899,#f59e0b)" onclick="setGrad('pg',this)"></div>
+    </div>
+  </div>
+
+  <!-- Animation -->
+  <div class="style-group">
+    <div class="sgt">🎬 ANIMATION</div>
+    <div class="tabtrow">
+      <button class="atab active" onclick="switchTab('enter',this)">登場</button>
+      <button class="atab" onclick="switchTab('exit',this)">退場</button>
+      <button class="atab" onclick="switchTab('char',this)">文字</button>
+      <button class="atab" onclick="switchTab('loop',this)">ループ</button>
+      <button class="atab" onclick="switchTab('speed',this)">速度</button>
+    </div>
+
+    <div class="tabpane show" id="tab-enter">
+      <div class="grid3" id="enterGrid">
+        <div class="abtn active" onclick="setEnter('fadeUp',this)">↑フェードアップ</div>
+        <div class="abtn" onclick="setEnter('fadeDown',this)">↓フェードダウン</div>
+        <div class="abtn" onclick="setEnter('fadeIn',this)">◎フェードイン</div>
+        <div class="abtn" onclick="setEnter('blurIn',this)">◈ブラーイン</div>
+        <div class="abtn" onclick="setEnter('scaleIn',this)">⊕ズームイン</div>
+        <div class="abtn" onclick="setEnter('scaleInBig',this)">⊖ズームアウト</div>
+        <div class="abtn" onclick="setEnter('slideLeft',this)">←スライド左</div>
+        <div class="abtn" onclick="setEnter('slideRight',this)">→スライド右</div>
+        <div class="abtn" onclick="setEnter('bounceIn',this)">⤻バウンス</div>
+        <div class="abtn" onclick="setEnter('spinIn',this)">↻スピン</div>
+        <div class="abtn" onclick="setEnter('flipInX',this)">↕フリップX</div>
+        <div class="abtn" onclick="setEnter('flipInY',this)">↔フリップY</div>
+        <div class="abtn" onclick="setEnter('dropIn',this)">⬇ドロップ</div>
+        <div class="abtn" onclick="setEnter('typewriter',this)">▌タイプ</div>
+        <div class="abtn" onclick="setEnter('glitch',this)">⚡グリッチ</div>
+        <div class="abtn" onclick="setEnter('shake',this)">↯シェイク</div>
+        <div class="abtn" onclick="setEnter('reveal',this)">▬リビール</div>
+      </div>
+      <button class="pbtn" onclick="previewEnter()">▶ 登場アニメをプレビュー</button>
+    </div>
+
+    <div class="tabpane" id="tab-exit">
+      <div class="grid3" id="exitGrid">
+        <div class="abtn active" onclick="setExit('fadeOut',this)">◎フェードアウト</div>
+        <div class="abtn" onclick="setExit('fadeDown',this)">↓フェードダウン</div>
+        <div class="abtn" onclick="setExit('fadeUp',this)">↑フェードアップ</div>
+        <div class="abtn" onclick="setExit('scaleOut',this)">⊖ズームアウト</div>
+        <div class="abtn" onclick="setExit('scaleBig',this)">⊕スケール拡大</div>
+        <div class="abtn" onclick="setExit('slideLeft',this)">←スライド左</div>
+        <div class="abtn" onclick="setExit('slideRight',this)">→スライド右</div>
+        <div class="abtn" onclick="setExit('blur',this)">◈ブラーアウト</div>
+        <div class="abtn" onclick="setExit('flipOut',this)">↕フリップ</div>
+      </div>
+      <div class="slabel" style="margin-top:8px">最後の行の消えるタイミング</div>
+      <select class="ss" id="lastFade">
+        <option value="never">消えない</option>
+        <option value="2">曲終了の2秒前</option>
+        <option value="5">曲終了の5秒前</option>
+        <option value="10">曲終了の10秒前</option>
+      </select>
+      <button class="pbtn" onclick="previewExit()">▶ 退場アニメをプレビュー</button>
+    </div>
+
+    <div class="tabpane" id="tab-char">
+      <div style="font-size:10px;color:var(--text2);margin-bottom:8px">文字を1文字ずつアニメーション</div>
+      <div class="grid3" id="charGrid">
+        <div class="abtn active" onclick="setChar('none',this)">OFF</div>
+        <div class="abtn" onclick="setChar('charFall',this)">⬇落下</div>
+        <div class="abtn" onclick="setChar('charSlide',this)">↑スライド</div>
+        <div class="abtn" onclick="setChar('charScale',this)">⊕スケール</div>
+        <div class="abtn" onclick="setChar('charFlip',this)">↔フリップ</div>
+        <div class="abtn" onclick="setChar('charGlitch',this)">⚡グリッチ</div>
+        <div class="abtn" onclick="setChar('charBounce',this)">〜バウンス</div>
+        <div class="abtn" onclick="setChar('charWave',this)">🌊ウェーブ</div>
+      </div>
+      <div class="ctrl-row" style="margin-top:8px"><span class="ctrl-label">文字間ディレイ</span><input type="range" id="charDelay" min="10" max="200" value="50" oninput="this.nextElementSibling.textContent=this.value+'ms'"><span class="ctrl-val">50ms</span></div>
+      <button class="pbtn" onclick="previewEnter()">▶ 文字アニメをプレビュー</button>
+    </div>
+
+    <div class="tabpane" id="tab-loop">
+      <div style="font-size:10px;color:var(--text2);margin-bottom:8px">表示中にずっとループするエフェクト</div>
+      <div class="grid3" id="loopGrid">
+        <div class="abtn active" onclick="setLoop('none',this)">OFF</div>
+        <div class="abtn" onclick="setLoop('float',this)">🌊フロート</div>
+        <div class="abtn" onclick="setLoop('pulse',this)">💓パルス</div>
+        <div class="abtn" onclick="setLoop('neon',this)">✦ネオン</div>
+        <div class="abtn" onclick="setLoop('glitchLoop',this)">⚡グリッチ</div>
+      </div>
+    </div>
+
+    <div class="tabpane" id="tab-speed">
+      <div class="slabel">登場・退場アニメの速さ</div>
+      <div class="speed-row">
+        <button class="spdbtn" onclick="setAnimSpd(.2,this)">0.2×<br>超速</button>
+        <button class="spdbtn" onclick="setAnimSpd(.4,this)">0.4×<br>速い</button>
+        <button class="spdbtn active" onclick="setAnimSpd(1,this)">1×<br>標準</button>
+        <button class="spdbtn" onclick="setAnimSpd(1.8,this)">1.8×<br>遅め</button>
+        <button class="spdbtn" onclick="setAnimSpd(3,this)">3×<br>スロー</button>
+      </div>
+      <div class="ctrl-row"><span class="ctrl-label">カスタム</span><input type="range" id="animSpdSlider" min="0.1" max="4" step="0.1" value="0.5" oninput="setAnimSpdVal(this.value);this.nextElementSibling.textContent=this.value+'s'"><span class="ctrl-val">0.5s</span></div>
+      <div class="slabel" style="margin-top:8px">ループの速さ</div>
+      <div class="ctrl-row"><span class="ctrl-label">周期</span><input type="range" id="loopSpdSlider" min="0.5" max="6" step="0.1" value="2" oninput="setLoopSpd(this.value);this.nextElementSibling.textContent=this.value+'s'"><span class="ctrl-val">2s</span></div>
+    </div>
+
+    <div class="ctrl-row" style="margin-top:8px">
+      <span class="ctrl-label">前後行を表示</span>
+      <input type="checkbox" id="showCtx" checked onchange="showLine(curIdx)">
+    </div>
+  </div>
+
+  <!-- Visualizer -->
+  <div class="style-group">
+    <div class="sgt">VISUALIZER</div>
+    <div class="btn-row" style="margin-bottom:10px">
+      <button class="visbtn active" id="vis-none" onclick="setVis('none',this)">なし</button>
+      <button class="visbtn" id="vis-bar" onclick="setVis('bar',this)">バー</button>
+      <button class="visbtn" id="vis-wave" onclick="setVis('wave',this)">波形</button>
+      <button class="visbtn" id="vis-circle" onclick="setVis('circle',this)">円形</button>
+    </div>
+    <div class="color-row"><label>ビジュアライザー色</label><input type="color" id="vizColor" value="#7c3aed" oninput="applyViz()"></div>
+  </div>
+
+  <!-- Overlay -->
+  <div class="style-group">
+    <div class="sgt">OVERLAY</div>
+    <div class="color-row"><label>オーバーレイ色</label><input type="color" id="overlayColor" value="#000000" oninput="applyBg()"></div>
+    <div class="ctrl-row"><span class="ctrl-label">透明度</span><input type="range" id="overlayOpac" min="0" max="80" value="0" oninput="applyBg();this.nextElementSibling.textContent=this.value+'%'"><span class="ctrl-val">0%</span></div>
+  </div>
+
+  <button class="export-btn" onclick="exportVideo()">🎬 EXPORT VIDEO</button>
+  <div style="padding:0 16px 20px;text-align:center;font-size:10px;color:var(--text2);line-height:1.6">
+    WebM（即時）またはMP4（FFmpeg変換）<br>Chrome / Edge 推奨
+  </div>
+</div>
+</div><!-- /workspace -->
+
 <script>
-// ===== STATE =====
-let lyrics = [];
-let timecodes = [];
-let currentLineIdx = -1;
-let isPlaying = false;
-let animType = 'fadeUp';
-let bgType = 'solid';
-let bgImageData = null;
-let textGrad = 'none';
-let visualizerType = 'none';
-let rafId = null;
-let audioCtx = null;
-let analyser = null;
-let source = null;
-let particleAnim = null;
-let particles = [];
+'use strict';
+// ===========================
+// STATE
+// ===========================
+var lyrics = [];
+var timecodes = [];
+var curIdx = -1;
+var enterAnim = 'fadeUp';
+var exitAnim = 'fadeOut';
+var charAnim = 'none';
+var loopAnim = 'none';
+var textGrad = 'none';
+var bgType = 'solid';
+var visType = 'none';
+var particleType = 'dots';
+var layers = [];
+var selLayerIdx = -1;
+var curLayerIdx = 0;
+var bgSwitchTimer = null;
+var particleRaf = null;
+var particles = [];
+var dragSrcIdx = -1;
+var isPlaying = false;
+var audioCtx = null;
+var analyser = null;
+var audioSrc = null;
+var visRaf = null;
+var exitTimer = null;
+var lastFadeTimer = null;
+var exportCanvas = null;
+var exportCtx = null;
+var exportRaf = null;
+var exportRecorder = null;
+var exportBgImgs = {};
+var exportFrameN = 0;
+var selectedExportFmt = 'webm';
 
-const audioEl = document.getElementById('audioEl');
-const lyricCurrent = document.getElementById('lyricCurrent');
-const lyricPrev = document.getElementById('lyricPrev');
-const lyricNext = document.getElementById('lyricNext');
-const stageBg = document.getElementById('stageBg');
-const stageContent = document.getElementById('stageContent');
-const previewStage = document.getElementById('previewStage');
-const vizBar = document.getElementById('vizBar');
-const waveCanvas = document.getElementById('waveCanvas');
+// DOM refs
+var audioEl = document.getElementById('audioEl');
+var lcur = document.getElementById('lcur');
+var lprev = document.getElementById('lprev');
+var lnext = document.getElementById('lnext');
+var stageBg = document.getElementById('stageBg');
+var scontent = document.getElementById('scontent');
+var stage = document.getElementById('stage');
+var vizbar = document.getElementById('vizbar');
+var wcanvas = document.getElementById('wcanvas');
 
-// ===== AUDIO UPLOAD =====
+// ===========================
+// AUDIO
+// ===========================
 function handleAudioUpload(e) {
-  const file = e.target.files[0];
+  var file = e.target.files[0];
   if (!file) return;
-  const url = URL.createObjectURL(file);
+  var url = URL.createObjectURL(file);
   audioEl.src = url;
   document.getElementById('fileInfo').style.display = 'flex';
   document.getElementById('fileName').textContent = file.name;
   document.getElementById('fileSize').textContent = formatSize(file.size);
   document.getElementById('audioPlayerWrap').style.display = 'block';
   document.getElementById('audioZone').style.display = 'none';
-  showToast('音声ファイルを読み込みました');
-
   audioEl.addEventListener('timeupdate', onTimeUpdate);
-  audioEl.addEventListener('ended', () => { isPlaying = false; document.getElementById('playBtn').textContent = '▶'; });
-  audioEl.addEventListener('loadedmetadata', () => {
-    updateTimeDisplay();
-    if (!audioCtx) initAudioContext();
-  });
+  audioEl.addEventListener('ended', function() { isPlaying = false; document.getElementById('playBtn').textContent = '▶'; });
+  audioEl.addEventListener('loadedmetadata', function() { updateTimeDisp(); if (!audioCtx) initAudioCtx(); });
+  showToast('音声ファイルを読み込みました');
 }
-
-function formatSize(b) {
-  if (b > 1048576) return (b/1048576).toFixed(1) + ' MB';
-  return (b/1024).toFixed(0) + ' KB';
-}
-
+function formatSize(b) { return b > 1048576 ? (b/1048576).toFixed(1)+' MB' : (b/1024).toFixed(0)+' KB'; }
 function togglePlay() {
   if (!audioEl.src) return;
   if (isPlaying) { audioEl.pause(); isPlaying = false; document.getElementById('playBtn').textContent = '▶'; }
   else { audioEl.play(); isPlaying = true; document.getElementById('playBtn').textContent = '⏸'; }
 }
-
 function onTimeUpdate() {
-  updateTimeDisplay();
-  const pct = audioEl.currentTime / (audioEl.duration || 1) * 100;
-  document.getElementById('progressFill').style.width = pct + '%';
-  updateCurrentLine();
+  updateTimeDisp();
+  var pct = audioEl.currentTime / (audioEl.duration || 1) * 100;
+  document.getElementById('progFill').style.width = pct + '%';
+  updateCurLine();
 }
-
-function updateTimeDisplay() {
-  const cur = fmtTime(audioEl.currentTime);
-  const dur = fmtTime(audioEl.duration || 0);
-  document.getElementById('timeDisplay').textContent = `${cur} / ${dur}`;
+function updateTimeDisp() {
+  document.getElementById('timeDisp').textContent = fmtT(audioEl.currentTime) + ' / ' + fmtT(audioEl.duration || 0);
 }
-
-function fmtTime(s) {
+function fmtT(s) {
   if (isNaN(s)) return '0:00';
-  const m = Math.floor(s/60), sec = Math.floor(s%60);
-  return `${m}:${sec.toString().padStart(2,'0')}`;
+  var m = Math.floor(s/60), sec = Math.floor(s%60);
+  return m + ':' + (sec < 10 ? '0' : '') + sec;
 }
-
 function seekAudio(e) {
   if (!audioEl.duration) return;
-  const bar = document.getElementById('progressBar');
-  const rect = bar.getBoundingClientRect();
-  const pct = (e.clientX - rect.left) / rect.width;
-  audioEl.currentTime = pct * audioEl.duration;
+  var bar = document.getElementById('progBar');
+  var rect = bar.getBoundingClientRect();
+  audioEl.currentTime = ((e.clientX - rect.left) / rect.width) * audioEl.duration;
 }
 
-// ===== LYRICS =====
+// ===========================
+// LYRICS
+// ===========================
 function parseLyrics() {
-  const text = document.getElementById('lyricsInput').value;
-  lyrics = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+  var raw = document.getElementById('lyricsInput').value;
+  lyrics = raw.split('\n').map(function(l){return l.trim();}).filter(function(l){return l.length > 0;});
   if (timecodes.length !== lyrics.length) {
-    timecodes = lyrics.map((_, i) => timecodes[i] ?? null);
+    timecodes = lyrics.map(function(_,i){ return timecodes[i] !== undefined ? timecodes[i] : null; });
   }
-  renderTimecodeList();
-  updateDisplay();
+  renderTcList();
+  showLine(curIdx);
 }
-
-function renderTimecodeList() {
-  const list = document.getElementById('timecodeList');
+function renderTcList() {
+  var list = document.getElementById('tcList');
   list.innerHTML = '';
-  lyrics.forEach((line, i) => {
-    const item = document.createElement('div');
-    item.className = 'tc-item' + (i === currentLineIdx ? ' current' : '');
-    item.id = `tc-${i}`;
-    const badge = document.createElement('span');
-    badge.className = 'tc-badge' + (timecodes[i] !== null ? ' set' : '');
-    badge.textContent = timecodes[i] !== null ? fmtTime(timecodes[i]) : '⏱ SET';
-    badge.onclick = (e) => { e.stopPropagation(); setTimecode(i); };
-    const txt = document.createElement('span');
-    txt.className = 'tc-text';
+  lyrics.forEach(function(line, i) {
+    var item = document.createElement('div');
+    item.className = 'tcitem' + (i === curIdx ? ' cur' : '');
+    item.id = 'tc-' + i;
+    var badge = document.createElement('span');
+    badge.className = 'tcbadge' + (timecodes[i] !== null ? ' set' : '');
+    badge.textContent = timecodes[i] !== null ? fmtT(timecodes[i]) : '⏱ SET';
+    badge.onclick = function(ev) { ev.stopPropagation(); setTc(i); };
+    var txt = document.createElement('span');
+    txt.className = 'tctext';
     txt.textContent = line;
-    const del = document.createElement('span');
-    del.className = 'tc-delete';
+    var del = document.createElement('span');
+    del.className = 'tcdel';
     del.textContent = '✕';
-    del.title = 'タイムコードをリセット';
-    del.onclick = (e) => { e.stopPropagation(); timecodes[i] = null; renderTimecodeList(); };
-    item.appendChild(badge);
-    item.appendChild(txt);
-    item.appendChild(del);
-    item.onclick = () => jumpTo(i);
+    del.onclick = function(ev) { ev.stopPropagation(); timecodes[i] = null; renderTcList(); };
+    item.appendChild(badge); item.appendChild(txt); item.appendChild(del);
+    item.onclick = function() { jumpTo(i); };
     list.appendChild(item);
   });
 }
-
-function setTimecode(i) {
+function setTc(i) {
   if (!audioEl.src) { showToast('先に音声ファイルを読み込んでください'); return; }
   timecodes[i] = audioEl.currentTime;
-  renderTimecodeList();
-  showToast(`行 ${i+1} → ${fmtTime(timecodes[i])} にセット`);
+  renderTcList();
+  showToast('行' + (i+1) + ' → ' + fmtT(timecodes[i]) + ' にセット');
 }
-
 function jumpTo(i) {
-  if (timecodes[i] !== null) { audioEl.currentTime = timecodes[i]; }
+  if (timecodes[i] !== null) audioEl.currentTime = timecodes[i];
   showLine(i);
 }
-
-function autoAssignTimecodes() {
+function autoTimecodes() {
   if (lyrics.length === 0) { showToast('先に歌詞を入力してください'); return; }
-  const dur = audioEl.duration || 120;
-  const step = dur / lyrics.length;
-  timecodes = lyrics.map((_, i) => +(i * step).toFixed(2));
-  renderTimecodeList();
+  var dur = audioEl.duration || 120;
+  var step = dur / lyrics.length;
+  timecodes = lyrics.map(function(_,i){ return +(i * step).toFixed(2); });
+  renderTcList();
   showToast('タイムコードを均等に設定しました');
 }
-
-function updateCurrentLine() {
-  const t = audioEl.currentTime;
-  let idx = -1;
-  for (let i = 0; i < timecodes.length; i++) {
+function updateCurLine() {
+  var t = audioEl.currentTime;
+  var idx = -1;
+  for (var i = 0; i < timecodes.length; i++) {
     if (timecodes[i] !== null && timecodes[i] <= t) idx = i;
   }
-  if (idx !== currentLineIdx) {
-    currentLineIdx = idx;
+  if (idx !== curIdx) {
     showLine(idx);
-    renderTimecodeList();
-    const el = document.getElementById(`tc-${idx}`);
-    if (el) el.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    renderTcList();
+    var el = document.getElementById('tc-' + idx);
+    if (el) el.scrollIntoView({ block:'nearest', behavior:'smooth' });
   }
 }
 
-// ===== ANIMATION SYSTEM =====
-let charAnimType = 'none';
-let loopAnimType = 'none';
-let animSpeedSec = 0.5;
-let loopSpeedSec = 2;
-let exitAnimTimer = null;
-let exitAnimType = 'fadeOut';
-let lastLineFadeTimer = null;
-
-function switchAnimTab(tab, el) {
-  document.querySelectorAll('.anim-tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.anim-tab-pane').forEach(p => p.classList.remove('visible'));
-  el.classList.add('active');
-  document.getElementById('tab-' + tab).classList.add('visible');
-}
-
-function setAnim(type, el) {
-  animType = type;
-  document.querySelectorAll('#animGrid .anim-btn').forEach(b => b.classList.remove('active'));
-  if (el) el.classList.add('active');
-  // Clear loop anim to avoid conflict
-  if (loopAnimType !== 'none') {
-    loopAnimType = 'none';
-    document.querySelectorAll('#loopAnimGrid .anim-btn').forEach(b => b.classList.remove('active'));
-    document.querySelector('#loopAnimGrid .anim-btn')?.classList.add('active');
-  }
-}
-
-function setExitAnim(type, el) {
-  exitAnimType = type;
-  document.querySelectorAll('#exitAnimGrid .anim-btn').forEach(b => b.classList.remove('active'));
-  if (el) el.classList.add('active');
-}
-
-function setCharAnim(type, el) {
-  charAnimType = type;
-  document.querySelectorAll('#charAnimGrid .anim-btn').forEach(b => b.classList.remove('active'));
-  if (el) el.classList.add('active');
-  showLine(currentLineIdx);
-}
-
-function setLoopAnim(type, el) {
-  loopAnimType = type;
-  document.querySelectorAll('#loopAnimGrid .anim-btn').forEach(b => b.classList.remove('active'));
-  if (el) el.classList.add('active');
-  showLine(currentLineIdx);
-}
-
-function setAnimSpeed(mult, el) {
-  const sec = parseFloat((0.5 * mult).toFixed(2));
-  animSpeedSec = sec;
-  document.documentElement.style.setProperty('--anim-dur', sec + 's');
-  document.querySelectorAll('#speedRow .speed-btn').forEach(b => b.classList.remove('active'));
-  if (el) el.classList.add('active');
-  const slider = document.getElementById('animSpeedSlider');
-  if (slider) { slider.value = sec; slider.nextElementSibling.textContent = sec + 's'; }
-}
-
-function setAnimSpeedCustom(val) {
-  animSpeedSec = parseFloat(val);
-  document.documentElement.style.setProperty('--anim-dur', val + 's');
-  document.querySelectorAll('#speedRow .speed-btn').forEach(b => b.classList.remove('active'));
-}
-
-function setLoopSpeed(val) {
-  loopSpeedSec = parseFloat(val);
-  document.documentElement.style.setProperty('--loop-dur', val + 's');
-}
-
-// Build char-split HTML with per-character animation
-function buildCharHTML(text, anim) {
-  if (!text || anim === 'none') return null;
-  const chars = [...text];
-  const delay = parseInt(document.getElementById('charDelay')?.value ?? 50);
-  const isLoop = (anim === 'charBounce' || anim === 'charWave');
-
-  return chars.map((ch, i) => {
-    if (ch === ' ') return '<span style="display:inline-block;width:0.3em"> </span>';
-    const d = isLoop
-      ? `${(i * 0.07).toFixed(2)}s`
-      : `${i * delay}ms`;
-    const dur = isLoop ? loopSpeedSec + 's' : animSpeedSec + 's';
-    const iter = isLoop ? 'infinite' : '1';
-    const fill = isLoop ? 'both' : 'both';
-    const timing = isLoop ? 'ease-in-out' : 'cubic-bezier(0.34,1.56,0.64,1)';
-    const rot = (Math.random() * 20 - 10).toFixed(1);
-    return `<span class="char" style="display:inline-block;animation-name:${anim};animation-duration:${dur};animation-delay:${d};animation-fill-mode:${fill};animation-iteration-count:${iter};animation-timing-function:${timing};--r:${rot}deg">${ch}</span>`;
-  }).join('');
-}
-
-function previewCurrentAnim() {
-  const idx = currentLineIdx >= 0 ? currentLineIdx : 0;
-  showLine(idx);
-}
-
-function previewExitAnim() {
-  const stage = document.getElementById('stageContent');
-  stage.className = stage.className.replace(/\bexit-\S+/g, '').trim();
-  stage.classList.add('exit-' + exitAnimType);
-  lyricCurrent.classList.add('exiting');
-  setTimeout(() => {
-    lyricCurrent.classList.remove('exiting');
-    stage.className = stage.className.replace(/\bexit-\S+/g, '').trim();
-    showLine(currentLineIdx >= 0 ? currentLineIdx : 0);
-  }, Math.max(animSpeedSec * 1000, 400));
-}
-
+// ===========================
+// SHOW LINE + ANIMATIONS
+// ===========================
 function showLine(idx) {
-  currentLineIdx = idx;
-  const cur = lyrics[idx] ?? '';
+  curIdx = idx;
+  var curText = lyrics[idx] || '';
+  if (exitTimer) { clearTimeout(exitTimer); exitTimer = null; }
+  if (lastFadeTimer) { clearTimeout(lastFadeTimer); lastFadeTimer = null; }
 
-  if (exitAnimTimer) { clearTimeout(exitAnimTimer); exitAnimTimer = null; }
-  if (lastLineFadeTimer) { clearTimeout(lastLineFadeTimer); lastLineFadeTimer = null; }
+  // Clear exit classes
+  scontent.className = scontent.className.replace(/\bx-\S+/g, '').trim();
 
-  const stage = document.getElementById('stageContent');
-  stage.className = stage.className.replace(/\bexit-\S+/g, '').trim();
-
-  if (cur === '' && idx < 0) {
-    lyricCurrent.innerHTML = '';
-    lyricCurrent.textContent = '';
-    lyricCurrent.classList.remove('exiting');
-    stage.className = stage.className.replace(/\benter-\S+/g, '').trim();
-    applyTextStyles();
+  if (!curText && idx < 0) {
+    lcur.innerHTML = '';
+    lcur.classList.remove('exit');
+    scontent.className = scontent.className.replace(/\be-\S+/g, '').trim();
+    applyText();
     return;
   }
 
-  // Exit on previous
-  const hasPrev = lyricCurrent.textContent?.trim() || lyricCurrent.innerHTML?.trim();
+  // Exit anim on prev content
+  var hasPrev = lcur.textContent.trim() || lcur.innerHTML.trim();
   if (hasPrev && idx >= 0) {
-    stage.classList.add('exit-' + exitAnimType);
-    lyricCurrent.classList.add('exiting');
+    scontent.classList.add('x-' + exitAnim);
+    lcur.classList.add('exit');
   }
+  var exitMs = hasPrev ? Math.min(400, 500) : 0;
 
-  const exitMs = hasPrev ? Math.min(animSpeedSec * 800, 500) : 0;
+  exitTimer = setTimeout(function() {
+    lcur.classList.remove('exit');
+    scontent.className = scontent.className.replace(/\bx-\S+/g, '').trim();
+    scontent.className = scontent.className.replace(/\be-\S+/g, '').trim();
 
-  exitAnimTimer = setTimeout(() => {
-    lyricCurrent.classList.remove('exiting');
-    stage.className = stage.className.replace(/\bexit-\S+/g, '').trim();
-
-    // Determine what to render
-    const effectiveLoop = loopAnimType !== 'none';
-    const effectiveChar = charAnimType !== 'none';
-
-    if (effectiveChar && cur) {
-      // Char-by-char mode: ignore enter anim class, use char spans
-      stage.className = stage.className.replace(/\benter-\S+/g, '').trim();
-      lyricCurrent.innerHTML = buildCharHTML(cur, charAnimType);
-    } else if (effectiveLoop) {
-      // Loop anim: apply as enter class
-      lyricCurrent.textContent = cur || '♪';
-      stage.className = stage.className.replace(/\benter-\S+/g, '').trim();
-      void lyricCurrent.offsetWidth;
-      stage.classList.add('enter-' + loopAnimType);
+    // Render content
+    if (charAnim !== 'none' && curText) {
+      lcur.innerHTML = buildChars(curText, charAnim);
+    } else if (loopAnim !== 'none') {
+      lcur.textContent = curText || '♪';
+      void lcur.offsetWidth;
+      scontent.classList.add('e-' + loopAnim);
     } else {
-      // Normal enter anim
-      lyricCurrent.textContent = cur || (idx >= 0 ? '♪' : '');
-      stage.className = stage.className.replace(/\benter-\S+/g, '').trim();
-      if (cur) {
-        void lyricCurrent.offsetWidth;
-        stage.classList.add('enter-' + animType);
+      lcur.textContent = curText || (idx >= 0 ? '♪' : '');
+      if (curText) {
+        void lcur.offsetWidth;
+        scontent.classList.add('e-' + enterAnim);
       }
     }
 
-    lyricPrev.innerHTML = '';
-    lyricPrev.style.opacity = '0';
-    lyricNext.innerHTML = '';
-    lyricNext.style.opacity = '0';
+    // Prev/next
+    var showCtx = document.getElementById('showCtx').checked;
+    lprev.textContent = showCtx && idx > 0 ? (lyrics[idx-1] || '') : '';
+    lprev.style.opacity = (showCtx && idx > 0) ? '0.4' : '0';
+    lnext.textContent = showCtx && idx < lyrics.length-1 ? (lyrics[idx+1] || '') : '';
+    lnext.style.opacity = (showCtx && idx < lyrics.length-1) ? '0.4' : '0';
 
-    applyTextStyles();
-    scheduleLastLineFade(idx);
+    applyText();
+    schedLastFade(idx);
   }, exitMs);
 }
 
-function scheduleLastLineFade(idx) {
+function buildChars(text, anim) {
+  var chars = Array.from(text);
+  var delay = parseInt(document.getElementById('charDelay').value) || 50;
+  var isLoop = (anim === 'charBounce' || anim === 'charWave');
+  return chars.map(function(ch, i) {
+    if (ch === ' ') return '<span style="display:inline-block;width:.3em"> </span>';
+    var d = isLoop ? (i * 0.07).toFixed(2) + 's' : (i * delay) + 'ms';
+    var dur = isLoop ? getComputedStyle(document.documentElement).getPropertyValue('--loop-dur').trim() : getComputedStyle(document.documentElement).getPropertyValue('--anim-dur').trim();
+    var iter = isLoop ? 'infinite' : '1';
+    var rot = (Math.random() * 20 - 10).toFixed(1);
+    return '<span class="char" style="animation-name:' + anim + ';animation-duration:' + dur + ';animation-delay:' + d + ';animation-iteration-count:' + iter + ';animation-fill-mode:both;--r:' + rot + 'deg">' + ch + '</span>';
+  }).join('');
+}
+
+function schedLastFade(idx) {
   if (idx !== lyrics.length - 1) return;
-  const mode = document.getElementById('lastLineFadeMode')?.value ?? 'never';
+  var mode = document.getElementById('lastFade').value;
   if (mode === 'never') return;
-
-  const stage = document.getElementById('stageContent');
-  const secsBefore = parseFloat(mode);
-  const dur = audioEl.duration;
+  var secsBefore = parseFloat(mode);
+  var dur = audioEl.duration;
   if (!dur || isNaN(dur)) return;
-  const fadeAt = (dur - secsBefore) * 1000 - audioEl.currentTime * 1000;
+  var fadeAt = (dur - secsBefore - audioEl.currentTime) * 1000;
   if (fadeAt <= 0) return;
-
-  lastLineFadeTimer = setTimeout(() => {
-    stage.className = stage.className.replace(/\bexit-\S+/g, '').trim();
-    stage.classList.add('exit-' + exitAnimType);
-    lyricCurrent.classList.add('exiting');
-    setTimeout(() => {
-      lyricCurrent.classList.remove('exiting');
-      lyricCurrent.innerHTML = '';
-      stage.className = stage.className.replace(/\bexit-\S+/g, '').trim();
+  lastFadeTimer = setTimeout(function() {
+    scontent.className = scontent.className.replace(/\bx-\S+/g,'').trim();
+    scontent.classList.add('x-' + exitAnim);
+    lcur.classList.add('exit');
+    setTimeout(function() {
+      lcur.classList.remove('exit');
+      lcur.innerHTML = '';
+      scontent.className = scontent.className.replace(/\bx-\S+/g,'').trim();
     }, 450);
   }, fadeAt);
 }
 
-function updateDisplay() {
-  showLine(currentLineIdx);
+// ===========================
+// ANIMATION CONTROLS
+// ===========================
+function switchTab(name, el) {
+  document.querySelectorAll('.atab').forEach(function(b){b.classList.remove('active');});
+  document.querySelectorAll('.tabpane').forEach(function(p){p.classList.remove('show');});
+  el.classList.add('active');
+  document.getElementById('tab-' + name).classList.add('show');
+}
+function setEnter(t, el) {
+  enterAnim = t;
+  document.querySelectorAll('#enterGrid .abtn').forEach(function(b){b.classList.remove('active');});
+  el.classList.add('active');
+  loopAnim = 'none';
+  document.querySelectorAll('#loopGrid .abtn').forEach(function(b){b.classList.remove('active');});
+  document.querySelector('#loopGrid .abtn').classList.add('active');
+}
+function setExit(t, el) {
+  exitAnim = t;
+  document.querySelectorAll('#exitGrid .abtn').forEach(function(b){b.classList.remove('active');});
+  el.classList.add('active');
+}
+function setChar(t, el) {
+  charAnim = t;
+  document.querySelectorAll('#charGrid .abtn').forEach(function(b){b.classList.remove('active');});
+  el.classList.add('active');
+  showLine(curIdx);
+}
+function setLoop(t, el) {
+  loopAnim = t;
+  document.querySelectorAll('#loopGrid .abtn').forEach(function(b){b.classList.remove('active');});
+  el.classList.add('active');
+  showLine(curIdx);
+}
+function setAnimSpd(mult, el) {
+  var sec = (0.5 * mult).toFixed(2);
+  document.documentElement.style.setProperty('--anim-dur', sec + 's');
+  document.querySelectorAll('.spdbtn').forEach(function(b){b.classList.remove('active');});
+  if (el) el.classList.add('active');
+  var sl = document.getElementById('animSpdSlider');
+  sl.value = sec;
+  sl.nextElementSibling.textContent = sec + 's';
+}
+function setAnimSpdVal(v) {
+  document.documentElement.style.setProperty('--anim-dur', v + 's');
+  document.querySelectorAll('.spdbtn').forEach(function(b){b.classList.remove('active');});
+}
+function setLoopSpd(v) {
+  document.documentElement.style.setProperty('--loop-dur', v + 's');
+}
+function previewEnter() { showLine(curIdx >= 0 ? curIdx : 0); }
+function previewExit() {
+  scontent.className = scontent.className.replace(/\bx-\S+/g,'').trim();
+  scontent.classList.add('x-' + exitAnim);
+  lcur.classList.add('exit');
+  setTimeout(function() {
+    lcur.classList.remove('exit');
+    scontent.className = scontent.className.replace(/\bx-\S+/g,'').trim();
+    showLine(curIdx >= 0 ? curIdx : 0);
+  }, 600);
 }
 
-// ===== STYLES =====
-function updateStyles() {
-  applyBg();
-  applyTextStyles();
-  applyViz();
-}
-
-function applyBg() {
-  const bg = stageBg;
-  if (bgType === 'solid') {
-    bg.style.background = document.getElementById('bgColor').value;
-    bg.style.backgroundImage = 'none';
-  } else if (bgType === 'gradient') {
-    const c1 = document.getElementById('grad1').value;
-    const c2 = document.getElementById('grad2').value;
-    const dir = document.getElementById('gradDir').value;
-    bg.style.background = `linear-gradient(${dir}, ${c1}, ${c2})`;
-  } else if (bgType === 'image' && bgImageData) {
-    const dim = document.getElementById('bgDim').value / 100;
-    bg.style.background = `linear-gradient(rgba(0,0,0,${dim}),rgba(0,0,0,${dim})), url(${bgImageData}) center/cover`;
-  } else if (bgType === 'particle') {
-    bg.style.background = '#000';
-    startParticles();
-  }
-
-  // Overlay
-  const oc = document.getElementById('overlayColor').value;
-  const oo = document.getElementById('overlayOpacity').value / 100;
-  stageContent.style.background = oo > 0 ? hexToRgba(oc, oo) : 'transparent';
-}
-
-function applyTextStyles() {
-  const ff = document.getElementById('fontFamily').value;
-  const fs = document.getElementById('fontSize').value + 'px';
-  const fw = document.getElementById('fontWeight').value;
-  const tc = document.getElementById('textColor').value;
-  const sc = document.getElementById('subTextColor').value;
-  const lh = document.getElementById('lineHeight').value;
-  const ls = document.getElementById('letterSpacing').value + 'px';
-  const ta = document.getElementById('textAlign').value;
-  const shColor = document.getElementById('shadowColor').value;
-  const shBlur = document.getElementById('shadowBlur').value;
-  const stColor = document.getElementById('strokeColor').value;
-  const stWidth = document.getElementById('strokeWidth').value;
-
-  const shadow = `0 0 ${shBlur}px ${shColor}, 0 0 ${shBlur*2}px ${shColor}60`;
-  const stroke = stWidth > 0 ? `0 0 0 ${stWidth}px ${stColor}` : 'none';
-
-  lyricCurrent.style.fontFamily = ff;
-  lyricCurrent.style.fontSize = fs;
-  lyricCurrent.style.fontWeight = fw;
-  lyricCurrent.style.lineHeight = lh;
-  lyricCurrent.style.letterSpacing = ls;
-  lyricCurrent.style.textAlign = ta;
-  lyricCurrent.style.textShadow = shadow;
-  lyricCurrent.style.webkitTextStroke = stWidth > 0 ? `${stWidth}px ${stColor}` : '0';
-
-  if (textGrad === 'none') {
-    lyricCurrent.style.color = tc;
-    lyricCurrent.style.backgroundImage = 'none';
-    lyricCurrent.style.webkitBackgroundClip = 'unset';
-    lyricCurrent.style.webkitTextFillColor = 'unset';
+// ===========================
+// TEXT STYLES
+// ===========================
+function applyText() {
+  var ff = document.getElementById('fontFam').value;
+  var fs = document.getElementById('fontSize').value + 'px';
+  var fw = document.getElementById('fontW').value;
+  var tc = document.getElementById('textColor').value;
+  var lh = document.getElementById('lineH').value;
+  var ls = document.getElementById('letterSp').value + 'px';
+  var ta = document.getElementById('textAlign').value;
+  var shC = document.getElementById('shadowColor').value;
+  var shB = document.getElementById('shadowBlur').value;
+  var stC = document.getElementById('strokeColor').value;
+  var stW = document.getElementById('strokeW').value;
+  var shadow = '0 0 ' + shB + 'px ' + shC + ', 0 0 ' + (shB*2) + 'px ' + shC + '60';
+  lcur.style.fontFamily = ff;
+  lcur.style.fontSize = fs;
+  lcur.style.fontWeight = fw;
+  lcur.style.lineHeight = lh;
+  lcur.style.letterSpacing = ls;
+  lcur.style.textAlign = ta;
+  lcur.style.textShadow = shadow;
+  lcur.style.webkitTextStroke = stW > 0 ? stW + 'px ' + stC : '0';
+  var gradMap = {
+    'none': null,
+    'white': 'linear-gradient(90deg,#fff,#aaa)',
+    'pc': 'linear-gradient(90deg,#a855f7,#06b6d4)',
+    'gr': 'linear-gradient(90deg,#f59e0b,#ef4444)',
+    'gc': 'linear-gradient(90deg,#22c55e,#06b6d4)',
+    'pg': 'linear-gradient(90deg,#ec4899,#f59e0b)'
+  };
+  if (textGrad !== 'none' && gradMap[textGrad]) {
+    lcur.style.backgroundImage = gradMap[textGrad];
+    lcur.style.webkitBackgroundClip = 'text';
+    lcur.style.webkitTextFillColor = 'transparent';
+    lcur.style.color = 'transparent';
   } else {
-    const grads = {
-      'white': 'linear-gradient(90deg,#fff,#aaa)',
-      'purple-cyan': 'linear-gradient(90deg,#a855f7,#06b6d4)',
-      'gold-red': 'linear-gradient(90deg,#f59e0b,#ef4444)',
-      'green-cyan': 'linear-gradient(90deg,#22c55e,#06b6d4)',
-      'pink-gold': 'linear-gradient(90deg,#ec4899,#f59e0b)',
-    };
-    lyricCurrent.style.backgroundImage = grads[textGrad];
-    lyricCurrent.style.webkitBackgroundClip = 'text';
-    lyricCurrent.style.webkitTextFillColor = 'transparent';
-    lyricCurrent.style.color = 'transparent';
+    lcur.style.color = tc;
+    lcur.style.backgroundImage = 'none';
+    lcur.style.webkitBackgroundClip = 'unset';
+    lcur.style.webkitTextFillColor = 'unset';
   }
-
-  // Propagate styles to .char spans (char-anim mode)
-  Array.from(lyricCurrent.querySelectorAll('.char')).forEach(ch => {
-    ch.style.fontFamily = ff;
-    ch.style.fontWeight = fw;
+  // Apply to char spans
+  lcur.querySelectorAll('.char').forEach(function(ch) {
+    ch.style.fontFamily = ff; ch.style.fontWeight = fw;
+    if (textGrad === 'none') { ch.style.color = tc; ch.style.webkitTextFillColor = ''; }
     ch.style.textShadow = shadow;
-    if (textGrad === 'none') {
-      ch.style.color = tc;
-      ch.style.webkitTextFillColor = '';
-    }
   });
-
-  [lyricPrev, lyricNext].forEach(el => {
+  [lprev, lnext].forEach(function(el) {
     el.style.fontFamily = ff;
-    el.style.fontSize = Math.round(parseInt(fs)*0.65) + 'px';
-    el.style.color = sc;
+    el.style.fontSize = (Math.round(parseInt(fs)*0.65)) + 'px';
     el.style.lineHeight = lh;
     el.style.letterSpacing = ls;
     el.style.textAlign = ta;
     el.style.fontWeight = fw;
   });
 }
-
-function applyViz() {
-  const col = document.getElementById('vizColor').value;
-  Array.from(vizBar.children).forEach(b => b.style.background = col);
+function setGrad(g, el) {
+  textGrad = g;
+  document.querySelectorAll('.swatch').forEach(function(s){s.classList.remove('active');});
+  el.classList.add('active');
+  applyText();
 }
 
-// ===== BG TYPE =====
-function setBgType(type) {
-  bgType = type;
-  document.querySelectorAll('.bg-type-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('bg' + type.charAt(0).toUpperCase() + type.slice(1))?.classList.add('active');
-  document.getElementById('bgSolidCtrl').style.display = type === 'solid' ? 'block' : 'none';
-  document.getElementById('bgGradCtrl').style.display = type === 'gradient' ? 'block' : 'none';
-  document.getElementById('bgImageCtrl').style.display = type === 'image' ? 'block' : 'none';
-  if (type !== 'particle') stopParticles();
+// ===========================
+// BACKGROUND
+// ===========================
+function setBgType(t, el) {
+  bgType = t;
+  document.querySelectorAll('.bgtbtn').forEach(function(b){b.classList.remove('active');});
+  el.classList.add('active');
+  ['solid','gradient','media','particle'].forEach(function(n){
+    document.getElementById('ctrl-' + n).style.display = n === t ? 'block' : 'none';
+  });
+  if (t !== 'particle') stopParticles();
+  if (t === 'media') startBgLoop();
+  else stopBgLoop();
   applyBg();
 }
 
-function handleBgImage(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = ev => { bgImageData = ev.target.result; applyBg(); };
-  reader.readAsDataURL(file);
-}
+var BG_MOTION_CLASS = {
+  none:'', zoomIn:'m-zoomIn', zoomOut:'m-zoomOut',
+  panL:'m-panL', panR:'m-panR', panU:'m-panU', panD:'m-panD',
+  ken:'m-ken', pulse:'m-pulse', wave:'m-wave'
+};
+var BG_MOTION_DUR = {
+  none:0, zoomIn:20, zoomOut:20, panL:15, panR:15, panU:15, panD:15, ken:30, pulse:3, wave:4
+};
 
-// ===== TEXT GRADIENT =====
-function setTextGrad(g) {
-  textGrad = g;
-  document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
-  event.target.classList.add('active');
-  applyTextStyles();
-}
-
-// ===== RATIO =====
-function changeRatio(r) {
-  previewStage.className = 'preview-stage ratio-' + r;
-  setTimeout(resizeWaveCanvas, 100);
-}
-
-// ===== AUDIO CONTEXT / VISUALIZER =====
-function initAudioContext() {
-  try {
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    analyser = audioCtx.createAnalyser();
-    analyser.fftSize = 128;
-    source = audioCtx.createMediaElementSource(audioEl);
-    source.connect(analyser);
-    analyser.connect(audioCtx.destination);
-    startVisualizerLoop();
-  } catch(e) { console.warn('AudioContext not available'); }
-}
-
-function setVisualizer(type) {
-  visualizerType = type;
-  document.querySelectorAll('.vis-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('vis' + type.charAt(0).toUpperCase() + type.slice(1))?.classList.add('active');
-  vizBar.style.display = (type === 'bar') ? 'flex' : 'none';
-  waveCanvas.style.display = (type === 'wave' || type === 'circle') ? 'block' : 'none';
-  if (type === 'none') { vizBar.innerHTML = ''; waveCanvas.getContext('2d')?.clearRect(0,0,waveCanvas.width,waveCanvas.height); }
-  if (type === 'bar') initBarViz();
-}
-
-function initBarViz() {
-  vizBar.innerHTML = '';
-  for (let i = 0; i < 32; i++) {
-    const b = document.createElement('div');
-    b.className = 'viz-bar-item';
-    b.style.height = '4px';
-    b.style.background = document.getElementById('vizColor').value;
-    vizBar.appendChild(b);
-  }
-}
-
-function resizeWaveCanvas() {
-  const rect = previewStage.getBoundingClientRect();
-  waveCanvas.width = rect.width;
-  waveCanvas.height = 80;
-}
-
-function startVisualizerLoop() {
-  if (!analyser) return;
-  const data = new Uint8Array(analyser.frequencyBinCount);
-  const timeData = new Uint8Array(analyser.fftSize);
-  function loop() {
-    rafId = requestAnimationFrame(loop);
-    if (visualizerType === 'bar') {
-      analyser.getByteFrequencyData(data);
-      const bars = vizBar.children;
-      const col = document.getElementById('vizColor').value;
-      for (let i = 0; i < bars.length; i++) {
-        const val = data[Math.floor(i * data.length / bars.length)] / 255;
-        bars[i].style.height = (val * 56 + 4) + 'px';
-        bars[i].style.background = col;
-      }
-    } else if (visualizerType === 'wave') {
-      analyser.getByteTimeDomainData(timeData);
-      drawWave(timeData);
-    } else if (visualizerType === 'circle') {
-      analyser.getByteFrequencyData(data);
-      drawCircle(data);
+function applyBg() {
+  var bg = stageBg;
+  if (bgType === 'solid') {
+    bg.style.background = document.getElementById('bgColor').value;
+    bg.innerHTML = '';
+  } else if (bgType === 'gradient') {
+    var c1 = document.getElementById('grad1').value;
+    var c2 = document.getElementById('grad2').value;
+    var dir = document.getElementById('gradDir').value;
+    bg.style.background = 'linear-gradient(' + dir + ',' + c1 + ',' + c2 + ')';
+    bg.innerHTML = '';
+  } else if (bgType === 'particle') {
+    bg.style.background = document.getElementById('ptBgColor').value;
+    startParticles();
+  } else if (bgType === 'media') {
+    bg.style.background = '#000';
+    if (layers.length === 0) {
+      bg.innerHTML = '<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#444;font-size:12px">メディアを追加してください</div>';
+      return;
     }
-    if (bgType === 'particle') updateParticles();
+    renderBgLayer();
   }
-  loop();
+  // Overlay
+  var oo = document.getElementById('overlayOpac').value / 100;
+  scontent.style.background = oo > 0 ? hexRgba(document.getElementById('overlayColor').value, oo) : 'transparent';
 }
 
-function drawWave(data) {
-  const canvas = waveCanvas;
-  const ctx = canvas.getContext('2d');
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  const col = document.getElementById('vizColor').value;
-  ctx.strokeStyle = col;
-  ctx.lineWidth = 2;
-  ctx.shadowColor = col;
-  ctx.shadowBlur = 8;
-  ctx.beginPath();
-  const step = canvas.width / data.length;
-  for (let i = 0; i < data.length; i++) {
-    const y = (data[i] / 128) * (canvas.height / 2);
-    if (i === 0) ctx.moveTo(0, y);
-    else ctx.lineTo(i * step, y);
+function renderBgLayer() {
+  var idx = Math.min(curLayerIdx, layers.length - 1);
+  var layer = layers[idx];
+  if (!layer) return;
+  var bg = stageBg;
+  var baseDur = BG_MOTION_DUR[layer.motion] || 10;
+  var dur = (baseDur / (layer.motionSpeed || 1)).toFixed(2);
+  bg.style.setProperty('--bg-motion-dur', dur + 's');
+
+  if (bg._lastId === layer.id) {
+    // Update existing
+    var cur = bg.querySelector('.sbg-cur');
+    if (cur) {
+      cur.style.filter = layer.blur > 0 ? 'blur(' + layer.blur + 'px)' : '';
+      cur.style.opacity = layer.opacity / 100;
+      var cls = layer.type === 'image' ? 'sbg-img' : 'sbg-vid';
+      cur.className = cls + ' sbg-cur' + (layer.motion !== 'none' ? ' ' + BG_MOTION_CLASS[layer.motion] : '');
+    }
+    var dm = bg.querySelector('.bg-dim');
+    if (dm) dm.style.background = 'rgba(0,0,0,' + (layer.dim/100) + ')';
+    return;
   }
-  ctx.stroke();
+
+  var oldEl = bg.querySelector('.sbg-cur');
+  if (oldEl) { oldEl.classList.remove('sbg-cur'); oldEl.classList.add('sbg-old'); }
+
+  var newEl;
+  if (layer.type === 'image') {
+    newEl = document.createElement('div');
+    newEl.className = 'sbg-img sbg-cur' + (layer.motion !== 'none' ? ' ' + BG_MOTION_CLASS[layer.motion] : '');
+    newEl.style.backgroundImage = 'url(' + layer.data + ')';
+  } else {
+    newEl = document.createElement('video');
+    newEl.className = 'sbg-vid sbg-cur' + (layer.motion !== 'none' ? ' ' + BG_MOTION_CLASS[layer.motion] : '');
+    newEl.src = layer.data;
+    newEl.autoplay = true; newEl.loop = true; newEl.muted = true; newEl.playsInline = true;
+  }
+  newEl.style.filter = layer.blur > 0 ? 'blur(' + layer.blur + 'px)' : '';
+  newEl.style.opacity = '0';
+  newEl.style.zIndex = '1';
+  bg.appendChild(newEl);
+  if (layer.type === 'video') newEl.play().catch(function(){});
+
+  // Dim overlay
+  var dm = bg.querySelector('.bg-dim');
+  if (!dm) { dm = document.createElement('div'); dm.className = 'bg-dim'; dm.style.cssText = 'position:absolute;inset:0;pointer-events:none;z-index:10'; bg.appendChild(dm); }
+  dm.style.background = 'rgba(0,0,0,' + (layer.dim/100) + ')';
+  bg.appendChild(dm);
+
+  bg._lastId = layer.id;
+  runTrans(bg, newEl, oldEl, layer.transition, layer.opacity / 100);
 }
 
-function drawCircle(data) {
-  const canvas = waveCanvas;
-  const ctx = canvas.getContext('2d');
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  const col = document.getElementById('vizColor').value;
-  const cx = canvas.width / 2;
-  const cy = canvas.height / 2;
-  const r = 20;
-  ctx.strokeStyle = col;
-  ctx.lineWidth = 2;
-  ctx.shadowColor = col;
-  ctx.shadowBlur = 6;
-  ctx.beginPath();
-  for (let i = 0; i < data.length; i++) {
-    const angle = (i / data.length) * Math.PI * 2;
-    const amp = (data[i] / 255) * 30;
-    const x = cx + (r + amp) * Math.cos(angle);
-    const y = cy + (r + amp) * Math.sin(angle);
-    if (i === 0) ctx.moveTo(x, y);
-    else ctx.lineTo(x, y);
-  }
-  ctx.closePath();
-  ctx.stroke();
+function runTrans(bg, newEl, oldEl, type, tgt) {
+  var cleanup = function() { if (oldEl && oldEl.parentNode) oldEl.remove(); };
+  if (oldEl) oldEl.style.zIndex = '0';
+  newEl.style.zIndex = '1';
+  if (type === 'cut') { newEl.style.opacity = tgt; cleanup(); return; }
+  var dur = type === 'dissolve' ? 1200 : 800;
+  if (type === 'fade' || type === 'dissolve') {
+    newEl.style.transition = 'opacity ' + dur + 'ms ease';
+    requestAnimationFrame(function(){requestAnimationFrame(function(){newEl.style.opacity = tgt; setTimeout(cleanup, dur+50);});});
+  } else if (type === 'slide-left') {
+    newEl.style.transform = 'translateX(100%)'; newEl.style.opacity = tgt;
+    newEl.style.transition = 'transform .75s cubic-bezier(.25,.46,.45,.94)';
+    requestAnimationFrame(function(){requestAnimationFrame(function(){newEl.style.transform='translateX(0)';setTimeout(cleanup,820);});});
+  } else if (type === 'slide-right') {
+    newEl.style.transform = 'translateX(-100%)'; newEl.style.opacity = tgt;
+    newEl.style.transition = 'transform .75s cubic-bezier(.25,.46,.45,.94)';
+    requestAnimationFrame(function(){requestAnimationFrame(function(){newEl.style.transform='translateX(0)';setTimeout(cleanup,820);});});
+  } else if (type === 'zoom') {
+    newEl.style.transform = 'scale(1.2)'; newEl.style.transition = 'opacity .8s,transform .8s';
+    requestAnimationFrame(function(){requestAnimationFrame(function(){newEl.style.opacity=tgt;newEl.style.transform='scale(1)';setTimeout(cleanup,900);});});
+  } else if (type === 'wipe-down') {
+    newEl.style.clipPath = 'inset(0 0 100% 0)'; newEl.style.opacity = tgt;
+    newEl.style.transition = 'clip-path .8s ease';
+    requestAnimationFrame(function(){requestAnimationFrame(function(){newEl.style.clipPath='inset(0 0 0% 0)';setTimeout(cleanup,900);});});
+  } else { newEl.style.opacity = tgt; cleanup(); }
 }
 
-// ===== PARTICLES =====
+// ===========================
+// MEDIA LAYERS
+// ===========================
+function addLayers(e, type) {
+  var files = Array.from(e.target.files);
+  files.forEach(function(file) {
+    var url = URL.createObjectURL(file);
+    layers.push({ id: Date.now()+Math.random(), type:type, name:file.name, data:url, objectURL:url,
+      motion:'none', motionSpeed:1, dim:40, blur:0, opacity:100, transition:'fade', durationMode:'equal', durationSec:10 });
+  });
+  e.target.value = '';
+  renderLayers();
+  if (layers.length > 0) selLayer(layers.length - 1);
+  applyBg();
+  showToast(files.length + '個のファイルを追加しました');
+}
+function clearLayers() {
+  if (!layers.length) return;
+  if (!confirm('全レイヤーを削除しますか？')) return;
+  layers.forEach(function(l){URL.revokeObjectURL(l.objectURL);});
+  layers = []; selLayerIdx = -1; curLayerIdx = 0;
+  stopBgLoop(); renderLayers();
+  document.getElementById('layerEditor').style.display = 'none';
+  applyBg(); showToast('全レイヤーを削除しました');
+}
+function prevLayer() { if (!layers.length) return; curLayerIdx = (curLayerIdx - 1 + layers.length) % layers.length; applyBg(); renderLayers(); }
+function nextLayer() { if (!layers.length) return; curLayerIdx = (curLayerIdx + 1) % layers.length; applyBg(); renderLayers(); }
+function restartBgLoop() { stopBgLoop(); if (bgType==='media') startBgLoop(); }
+
+function renderLayers() {
+  var list = document.getElementById('layerList');
+  var items = list.querySelectorAll('.ml-item');
+  items.forEach(function(el){el.remove();});
+  if (layers.length === 0) {
+    var em = list.querySelector('.empty-msg');
+    if (em) em.style.display = '';
+    return;
+  }
+  var em = list.querySelector('.empty-msg');
+  if (em) em.style.display = 'none';
+
+  layers.forEach(function(layer, i) {
+    var isSel = i === selLayerIdx;
+    var isNow = i === curLayerIdx && bgType === 'media';
+    var item = document.createElement('div');
+    item.className = 'ml-item' + (isSel?' sel':'') + (isNow?' now':'');
+    item.draggable = true;
+    item.addEventListener('click', function(){selLayer(i);});
+    item.addEventListener('dragstart', function(ev){ dragSrcIdx=i; item.classList.add('dragging'); ev.dataTransfer.effectAllowed='move'; });
+    item.addEventListener('dragend', function(){ item.classList.remove('dragging'); document.querySelectorAll('.ml-item').forEach(function(el){el.classList.remove('drag-over');}); });
+    item.addEventListener('dragover', function(ev){ ev.preventDefault(); document.querySelectorAll('.ml-item').forEach(function(el){el.classList.remove('drag-over');}); if(dragSrcIdx!==i)item.classList.add('drag-over'); });
+    item.addEventListener('drop', function(ev){
+      ev.stopPropagation(); item.classList.remove('drag-over');
+      if (dragSrcIdx<0||dragSrcIdx===i) return;
+      var moved = layers.splice(dragSrcIdx,1)[0];
+      var ni = dragSrcIdx<i ? i-1 : i;
+      layers.splice(ni,0,moved);
+      if (selLayerIdx===dragSrcIdx) selLayerIdx=ni;
+      if (curLayerIdx===dragSrcIdx) curLayerIdx=ni;
+      dragSrcIdx=-1; renderLayers(); applyBg();
+    });
+
+    var thumb = layer.type==='image'
+      ? '<div class="ml-thumb-img" style="background-image:url('+layer.data+')"></div>'
+      : '<video class="ml-thumb" src="'+layer.data+'" muted></video>';
+    var durLbl = layer.durationMode==='equal'?'均等':layer.durationMode==='loop'?'ループ':layer.durationSec+'s';
+
+    item.innerHTML = (isNow?'<div class="now-badge">NOW PLAYING</div>':'')
+      + '<span class="drag-handle">⠿</span>'
+      + thumb
+      + '<div class="ml-info"><div class="ml-name">'+layer.name+'</div><div class="ml-meta">'+(layer.motion!=='none'?'⚡'+layer.motion:'静止')+' · '+durLbl+'</div></div>'
+      + '<span class="ml-type '+layer.type+'">'+(layer.type==='image'?'📷':'🎬')+'</span>'
+      + '<div class="ml-acts">'
+      + '<button class="lbtn" onclick="mvLayer('+i+',-1,event)" title="上へ">↑</button>'
+      + '<button class="lbtn" onclick="mvLayer('+i+',1,event)" title="下へ">↓</button>'
+      + '<button class="lbtn del" onclick="delLayer('+i+',event)" title="削除">✕</button>'
+      + '</div>';
+    list.appendChild(item);
+  });
+}
+
+function selLayer(i) {
+  selLayerIdx = i;
+  renderLayers();
+  var layer = layers[i];
+  if (!layer) return;
+  document.getElementById('layerEditor').style.display = 'block';
+  document.getElementById('edLayerName').textContent = layer.name;
+  document.getElementById('lyrDim').value = layer.dim;
+  document.getElementById('lyrDim').nextElementSibling.textContent = layer.dim + '%';
+  document.getElementById('lyrBlur').value = layer.blur;
+  document.getElementById('lyrBlur').nextElementSibling.textContent = layer.blur + 'px';
+  document.getElementById('lyrOpac').value = layer.opacity;
+  document.getElementById('lyrOpac').nextElementSibling.textContent = layer.opacity + '%';
+  document.getElementById('lyrTrans').value = layer.transition;
+  document.getElementById('lyrDurMode').value = layer.durationMode;
+  document.getElementById('lyrDurSec').value = layer.durationSec;
+  document.getElementById('lyrDurSec').nextElementSibling.textContent = layer.durationSec + 's';
+  toggleDurInput(layer.durationMode);
+  document.getElementById('lyrMotSpd').value = layer.motionSpeed;
+  document.getElementById('lyrMotSpd').nextElementSibling.textContent = layer.motionSpeed + '×';
+  document.querySelectorAll('#motionGrid .abtn').forEach(function(b){b.classList.toggle('active', b.dataset.m === layer.motion);});
+  applyBg();
+}
+function updateLayer(key, val) {
+  if (selLayerIdx < 0 || !layers[selLayerIdx]) return;
+  layers[selLayerIdx][key] = isNaN(val) ? val : +val;
+  renderLayers(); applyBg();
+}
+function selMotion(el) {
+  document.querySelectorAll('#motionGrid .abtn').forEach(function(b){b.classList.remove('active');});
+  el.classList.add('active');
+}
+function toggleDurInput(mode) {
+  document.getElementById('durInput').style.display = mode==='fixed' ? 'block' : 'none';
+}
+function mvLayer(i, dir, e) {
+  e.stopPropagation();
+  var j = i + dir;
+  if (j < 0 || j >= layers.length) return;
+  var tmp = layers[i]; layers[i] = layers[j]; layers[j] = tmp;
+  if (selLayerIdx===i) selLayerIdx=j; else if (selLayerIdx===j) selLayerIdx=i;
+  renderLayers(); applyBg();
+}
+function delLayer(i, e) {
+  e.stopPropagation();
+  URL.revokeObjectURL(layers[i].objectURL);
+  layers.splice(i, 1);
+  if (selLayerIdx >= layers.length) selLayerIdx = layers.length - 1;
+  renderLayers();
+  if (layers.length === 0) document.getElementById('layerEditor').style.display = 'none';
+  applyBg();
+}
+function previewTrans() {
+  if (layers.length < 2) { showToast('トランジションのプレビューには2枚以上必要です'); return; }
+  var prev = curLayerIdx;
+  curLayerIdx = (curLayerIdx + 1) % layers.length;
+  stageBg._lastId = null;
+  applyBg();
+  setTimeout(function(){ curLayerIdx = prev; stageBg._lastId = null; applyBg(); }, 2000);
+}
+
+// BG loop
+function getLayerDur(layer) {
+  if (layer.durationMode==='fixed') return layer.durationSec;
+  if (layer.durationMode==='loop' && layer.type==='video') return Infinity;
+  return (audioEl.duration || 60) / layers.length;
+}
+function startBgLoop() {
+  stopBgLoop(); curLayerIdx = 0; scheduleBgSwitch();
+}
+function stopBgLoop() { if (bgSwitchTimer) { clearTimeout(bgSwitchTimer); bgSwitchTimer = null; } }
+function scheduleBgSwitch() {
+  if (layers.length <= 1) return;
+  var dur = getLayerDur(layers[curLayerIdx]);
+  if (dur === Infinity) return;
+  bgSwitchTimer = setTimeout(function() {
+    var mode = document.getElementById('playMode').value;
+    if (mode === 'random') {
+      var next = Math.floor(Math.random() * layers.length);
+      if (next === curLayerIdx && layers.length > 1) next = (next+1) % layers.length;
+      curLayerIdx = next;
+    } else {
+      curLayerIdx = (curLayerIdx + 1) % layers.length;
+    }
+    stageBg._lastId = null;
+    applyBg(); renderLayers(); scheduleBgSwitch();
+  }, dur * 1000);
+}
+
+// ===========================
+// PARTICLES
+// ===========================
+function setPType(type, el) {
+  particleType = type;
+  document.querySelectorAll('#ptypeGrid .ptbtn').forEach(function(b){b.classList.remove('active');});
+  el.classList.add('active');
+  restartParticles();
+}
+function restartParticles() { if (bgType==='particle'){stopParticles();startParticles();} }
 function startParticles() {
-  if (particleAnim) return;
-  particles = Array.from({length: 60}, () => newParticle());
-  const canvas = document.createElement('canvas');
-  canvas.style.position = 'absolute';
-  canvas.style.inset = '0';
-  canvas.style.width = '100%';
-  canvas.style.height = '100%';
-  canvas.id = 'particleCanvas';
-  if (!document.getElementById('particleCanvas')) stageBg.appendChild(canvas);
+  if (particleRaf) return;
+  var cnt = parseInt(document.getElementById('ptDensity').value) || 60;
+  particles = [];
+  for (var i=0;i<cnt;i++) particles.push(newParticle());
+  var canvas = document.getElementById('particleCanvas');
+  if (!canvas) {
+    canvas = document.createElement('canvas');
+    canvas.id = 'particleCanvas';
+    canvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%';
+    stageBg.appendChild(canvas);
+  }
   animParticles();
 }
-
 function newParticle() {
-  return {
-    x: Math.random(),
-    y: Math.random(),
-    size: Math.random() * 3 + 1,
-    vx: (Math.random() - 0.5) * 0.002,
-    vy: -Math.random() * 0.003 - 0.001,
-    alpha: Math.random() * 0.8 + 0.2
-  };
+  return { x:Math.random(), y:Math.random(), size:Math.random()*3+1, vx:(Math.random()-.5)*.002, vy:-Math.random()*.003-.001, alpha:Math.random()*.8+.2 };
 }
-
 function animParticles() {
-  const canvas = document.getElementById('particleCanvas');
+  var canvas = document.getElementById('particleCanvas');
   if (!canvas) return;
-  const rect = previewStage.getBoundingClientRect();
-  canvas.width = rect.width || 640;
-  canvas.height = rect.height || 360;
-  const ctx = canvas.getContext('2d');
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  const col = document.getElementById('vizColor').value;
-  particles.forEach(p => {
-    ctx.globalAlpha = p.alpha;
-    ctx.fillStyle = col;
-    ctx.beginPath();
-    ctx.arc(p.x * canvas.width, p.y * canvas.height, p.size, 0, Math.PI*2);
-    ctx.fill();
+  var rect = stage.getBoundingClientRect();
+  canvas.width = rect.width || 640; canvas.height = rect.height || 360;
+  var ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  var col = document.getElementById('ptColor').value;
+  particles.forEach(function(p) {
+    ctx.globalAlpha = p.alpha; ctx.fillStyle = col;
+    ctx.beginPath(); ctx.arc(p.x*canvas.width, p.y*canvas.height, p.size, 0, Math.PI*2); ctx.fill();
     p.x += p.vx; p.y += p.vy;
     if (p.y < 0) { Object.assign(p, newParticle()); p.y = 1; }
   });
   ctx.globalAlpha = 1;
-  particleAnim = requestAnimationFrame(animParticles);
+  particleRaf = requestAnimationFrame(animParticles);
 }
-
 function stopParticles() {
-  if (particleAnim) { cancelAnimationFrame(particleAnim); particleAnim = null; }
-  const c = document.getElementById('particleCanvas');
+  if (particleRaf) { cancelAnimationFrame(particleRaf); particleRaf = null; }
+  var c = document.getElementById('particleCanvas');
   if (c) c.remove();
 }
 
-// ===== PREVIEW PLAY =====
+// ===========================
+// VISUALIZER
+// ===========================
+function setVis(type, el) {
+  visType = type;
+  document.querySelectorAll('.visbtn').forEach(function(b){b.classList.remove('active');});
+  el.classList.add('active');
+  vizbar.style.display = type==='bar' ? 'flex' : 'none';
+  wcanvas.style.display = (type==='wave'||type==='circle') ? 'block' : 'none';
+  if (type==='bar') initBarViz();
+  if (type==='none') { vizbar.innerHTML=''; var ctx=wcanvas.getContext('2d'); if(ctx)ctx.clearRect(0,0,wcanvas.width,wcanvas.height); }
+}
+function applyViz() {
+  var col = document.getElementById('vizColor').value;
+  Array.from(vizbar.children).forEach(function(b){b.style.background=col;});
+}
+function initBarViz() {
+  vizbar.innerHTML = '';
+  for (var i=0;i<32;i++) {
+    var b = document.createElement('div');
+    b.className = 'vizitem';
+    b.style.height = '4px';
+    b.style.background = document.getElementById('vizColor').value;
+    vizbar.appendChild(b);
+  }
+}
+function initAudioCtx() {
+  try {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    analyser = audioCtx.createAnalyser(); analyser.fftSize = 128;
+    audioSrc = audioCtx.createMediaElementSource(audioEl);
+    audioSrc.connect(analyser); analyser.connect(audioCtx.destination);
+    startVisLoop();
+  } catch(e) { console.warn('AudioContext unavailable'); }
+}
+function startVisLoop() {
+  if (!analyser) return;
+  var data = new Uint8Array(analyser.frequencyBinCount);
+  var tdata = new Uint8Array(analyser.fftSize);
+  function loop() {
+    visRaf = requestAnimationFrame(loop);
+    if (visType==='bar') {
+      analyser.getByteFrequencyData(data);
+      var bars = vizbar.children;
+      var col = document.getElementById('vizColor').value;
+      for (var i=0;i<bars.length;i++) {
+        var val = data[Math.floor(i*data.length/bars.length)] / 255;
+        bars[i].style.height = (val*56+4)+'px';
+        bars[i].style.background = col;
+      }
+    } else if (visType==='wave') {
+      analyser.getByteTimeDomainData(tdata);
+      drawWave(tdata);
+    } else if (visType==='circle') {
+      analyser.getByteFrequencyData(data);
+      drawCircle(data);
+    }
+    if (bgType==='particle') updateParticlesFromVis(data);
+  }
+  loop();
+}
+function drawWave(data) {
+  var col = document.getElementById('vizColor').value;
+  var ctx = wcanvas.getContext('2d');
+  ctx.clearRect(0,0,wcanvas.width,wcanvas.height);
+  ctx.strokeStyle=col; ctx.lineWidth=2; ctx.shadowColor=col; ctx.shadowBlur=8;
+  ctx.beginPath();
+  for (var i=0;i<data.length;i++) {
+    var xx = i/data.length*wcanvas.width;
+    var yy = (data[i]/128)*(wcanvas.height/2);
+    if (i===0) ctx.moveTo(xx,yy); else ctx.lineTo(xx,yy);
+  }
+  ctx.stroke(); ctx.shadowBlur=0;
+}
+function drawCircle(data) {
+  var col = document.getElementById('vizColor').value;
+  var ctx = wcanvas.getContext('2d');
+  ctx.clearRect(0,0,wcanvas.width,wcanvas.height);
+  var cx=wcanvas.width/2, cy=wcanvas.height/2, r=20;
+  ctx.strokeStyle=col; ctx.lineWidth=2; ctx.shadowColor=col; ctx.shadowBlur=6;
+  ctx.beginPath();
+  for (var i=0;i<data.length;i++) {
+    var angle = i/data.length*Math.PI*2;
+    var amp = data[i]/255*30;
+    var xx = cx+(r+amp)*Math.cos(angle);
+    var yy = cy+(r+amp)*Math.sin(angle);
+    if (i===0) ctx.moveTo(xx,yy); else ctx.lineTo(xx,yy);
+  }
+  ctx.closePath(); ctx.stroke(); ctx.shadowBlur=0;
+}
+function updateParticlesFromVis(data) {} // future hook
+
+function resizeWcanvas() {
+  var rect = stage.getBoundingClientRect();
+  wcanvas.width = rect.width; wcanvas.height = 80;
+}
+function changeRatio(v) {
+  stage.className = 'stage ' + (v==='169'?'r169':v==='916'?'r916':'r11');
+  setTimeout(resizeWcanvas, 100);
+}
+
+// ===========================
+// PREVIEW PLAY
+// ===========================
 function previewPlay() {
   if (!audioEl.src) { showToast('先に音声ファイルを読み込んでください'); return; }
-  audioEl.currentTime = 0;
-  audioEl.play();
-  isPlaying = true;
-  document.getElementById('playBtn').textContent = '⏸';
-  if (audioCtx?.state === 'suspended') audioCtx.resume();
+  audioEl.currentTime = 0; audioEl.play();
+  isPlaying = true; document.getElementById('playBtn').textContent = '⏸';
+  if (audioCtx && audioCtx.state==='suspended') audioCtx.resume();
 }
 
-// ===== EXPORT =====
+// ===========================
+// EXPORT
+// ===========================
 function exportVideo() {
   if (!audioEl.src) { showToast('音声ファイルが必要です'); return; }
-  if (lyrics.length === 0) { showToast('歌詞を入力してください'); return; }
-  const hasTimecodes = timecodes.some(t => t !== null);
-  if (!hasTimecodes) { showToast('タイムコードを設定してください（自動設定ボタンを使用）'); return; }
+  if (lyrics.length===0) { showToast('歌詞を入力してください'); return; }
+  if (!timecodes.some(function(t){return t!==null;})) { showToast('タイムコードを設定してください'); return; }
   showExportModal();
 }
-
 function showExportModal() {
-  // Check support upfront
-  const canvasTest = document.createElement('canvas');
-  const hasCapture = typeof canvasTest.captureStream === 'function';
-  const hasMR = typeof MediaRecorder !== 'undefined';
-
-  const supportNote = (!hasCapture || !hasMR)
-    ? `<p style="color:var(--red);font-size:12px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:6px;padding:8px;">
-        ⚠️ お使いの環境はCanvas録画（captureStream / MediaRecorder）に非対応です。<br>
-        <b>Google Chrome</b> または <b>Edge</b> のブラウザで直接ファイルを開いてください。<br>
-        代替として「フレーム書き出し（GIF風）」が利用できます。
-       </p>`
-    : `<p style="color:var(--text2);font-size:12px;">WebM形式で出力されます。録画時間 = 音楽の長さです。<br>録画中はタブを切り替えないでください。</p>`;
-
-  const modal = document.createElement('div');
+  var canvasTest = document.createElement('canvas');
+  var ok = typeof canvasTest.captureStream==='function' && typeof MediaRecorder!=='undefined';
+  var modal = document.createElement('div');
   modal.className = 'modal-overlay';
   modal.id = 'exportModal';
-  modal.innerHTML = `
-    <div class="modal">
-      <h3>🎬 動画エクスポート</h3>
-      ${supportNote}
-      <div class="modal-actions" style="flex-wrap:wrap;gap:8px;">
-        <button class="btn btn-ghost" onclick="document.getElementById('exportModal').remove()">キャンセル</button>
-        ${hasCapture && hasMR
-          ? `<button class="btn btn-primary" onclick="startCanvasRecording()">🔴 録画開始</button>`
-          : `<button class="btn" style="background:var(--accent3);color:#000;" onclick="exportFrameSequence()">📷 フレーム書き出し</button>`
-        }
-      </div>
-    </div>`;
+  modal.innerHTML = '<div class="modal">'
+    + '<h3 style="margin-bottom:14px">🎬 動画エクスポート</h3>'
+    + (!ok ? '<p style="color:var(--red);font-size:12px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:6px;padding:8px">⚠️ このブラウザは非対応です。Chrome/EdgeでHTMLを直接開いてください。</p>' : '')
+    + '<div class="export-opt sel" id="opt-webm" onclick="selFmt(\'webm\',this)"><span style="font-size:22px">🎞</span><div><div style="font-weight:700;font-size:13px">WebM（推奨・高速）</div><div style="font-size:11px;color:var(--text2)">ブラウザ内で即時録画</div></div></div>'
+    + '<div class="export-opt" id="opt-mp4" onclick="selFmt(\'mp4\',this)"><span style="font-size:22px">🎥</span><div><div style="font-weight:700;font-size:13px">MP4（FFmpeg変換）</div><div style="font-size:11px;color:var(--text2)">WebM録画後にMP4へ変換（時間がかかります）</div></div></div>'
+    + '<div class="modal-actions">'
+    + '<button class="btn btn-ghost" onclick="document.getElementById(\'exportModal\').remove()">キャンセル</button>'
+    + (ok ? '<button class="btn btn-primary" onclick="startExport()">🔴 録画開始</button>' : '')
+    + '</div></div>';
   document.body.appendChild(modal);
 }
-
-// ===== CANVAS-BASED RECORDING =====
-let exportCanvas = null;
-let exportCtx = null;
-let exportRaf = null;
-let exportRecorder = null;
-let exportBgImage = null;
-
-async function startCanvasRecording() {
-  document.getElementById('exportModal')?.remove();
-
-  // Build offscreen canvas at 1280x720
+function selFmt(fmt, el) {
+  selectedExportFmt = fmt;
+  document.querySelectorAll('.export-opt').forEach(function(o){o.classList.remove('sel');});
+  el.classList.add('sel');
+}
+function startExport() {
+  document.getElementById('exportModal').remove();
+  startRec(selectedExportFmt);
+}
+function startRec(fmt) {
   exportCanvas = document.createElement('canvas');
-  exportCanvas.width = 1280;
-  exportCanvas.height = 720;
+  exportCanvas.width = 1280; exportCanvas.height = 720;
   exportCtx = exportCanvas.getContext('2d');
+  exportFrameN = 0;
 
-  // Preload bg image if any
-  if (bgType === 'image' && bgImageData) {
-    exportBgImage = new Image();
-    await new Promise(res => { exportBgImage.onload = res; exportBgImage.src = bgImageData; });
-  } else {
-    exportBgImage = null;
-  }
-
-  // Setup audio stream
-  let audioStream = null;
-  if (audioCtx) {
-    try {
-      const dest = audioCtx.createMediaStreamDestination();
-      // connect source → dest (may already be connected to analyser→destination)
-      if (source) source.connect(dest);
-      audioStream = dest.stream;
-    } catch(e) {}
-  }
-
-  // Canvas stream
-  const videoStream = exportCanvas.captureStream(30);
-  const combinedStream = new MediaStream([
-    ...videoStream.getVideoTracks(),
-    ...(audioStream ? audioStream.getAudioTracks() : [])
-  ]);
-
-  // Pick best supported mimeType
-  const mimeTypes = [
-    'video/webm;codecs=vp9,opus',
-    'video/webm;codecs=vp8,opus',
-    'video/webm',
-  ];
-  const mimeType = mimeTypes.find(m => MediaRecorder.isTypeSupported(m)) || '';
-
-  const chunks = [];
-  exportRecorder = new MediaRecorder(combinedStream, mimeType ? { mimeType } : {});
-  exportRecorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
-  exportRecorder.onstop = () => {
-    const blob = new Blob(chunks, { type: 'video/webm' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = 'lyrics-video.webm'; a.click();
-    showToast('✅ 動画をダウンロードしました！');
-    cancelAnimationFrame(exportRaf);
-    hideExportProgress();
-  };
-
-  // Reset & play
-  audioEl.currentTime = 0;
-  currentLineIdx = -1;
-  exportRecorder.start(200);
-  audioEl.play();
-  isPlaying = true;
-  document.getElementById('playBtn').textContent = '⏸';
-  if (audioCtx?.state === 'suspended') audioCtx.resume();
-
-  showExportProgress();
-  renderExportFrame();
-
-  audioEl.addEventListener('ended', function onEnd() {
-    audioEl.removeEventListener('ended', onEnd);
-    setTimeout(() => {
-      exportRecorder.stop();
-      isPlaying = false;
-      document.getElementById('playBtn').textContent = '▶';
-    }, 300);
+  // Preload bg images
+  exportBgImgs = {};
+  var promises = layers.filter(function(l){return l.type==='image';}).map(function(layer) {
+    return new Promise(function(res) {
+      var img = new Image();
+      img.onload = function(){exportBgImgs[layer.id]=img;res();};
+      img.src = layer.data;
+    });
   });
-}
 
-function renderExportFrame() {
-  const W = exportCanvas.width, H = exportCanvas.height;
-  const ctx = exportCtx;
-
-  // --- Background ---
-  if (bgType === 'solid') {
-    ctx.fillStyle = document.getElementById('bgColor').value;
-    ctx.fillRect(0, 0, W, H);
-  } else if (bgType === 'gradient') {
-    const c1 = document.getElementById('grad1').value;
-    const c2 = document.getElementById('grad2').value;
-    const grd = ctx.createLinearGradient(0, 0, W, H);
-    grd.addColorStop(0, c1); grd.addColorStop(1, c2);
-    ctx.fillStyle = grd;
-    ctx.fillRect(0, 0, W, H);
-  } else if (bgType === 'image' && exportBgImage) {
-    ctx.drawImage(exportBgImage, 0, 0, W, H);
-    const dim = document.getElementById('bgDim').value / 100;
-    ctx.fillStyle = `rgba(0,0,0,${dim})`;
-    ctx.fillRect(0, 0, W, H);
-  } else if (bgType === 'particle') {
-    ctx.fillStyle = '#000';
-    ctx.fillRect(0, 0, W, H);
-    drawParticlesOnCanvas(ctx, W, H);
-  }
-
-  // --- Overlay ---
-  const oo = document.getElementById('overlayOpacity').value / 100;
-  if (oo > 0) {
-    ctx.fillStyle = hexToRgba(document.getElementById('overlayColor').value, oo);
-    ctx.fillRect(0, 0, W, H);
-  }
-
-  // --- Visualizer (bar) ---
-  if (visualizerType === 'bar' && analyser) {
-    const data = new Uint8Array(analyser.frequencyBinCount);
-    analyser.getByteFrequencyData(data);
-    const col = document.getElementById('vizColor').value;
-    ctx.fillStyle = col;
-    ctx.globalAlpha = 0.5;
-    const barW = W / 32;
-    for (let i = 0; i < 32; i++) {
-      const val = data[Math.floor(i * data.length / 32)] / 255;
-      const bh = val * 60 + 2;
-      ctx.fillRect(i * barW + 1, H - bh, barW - 2, bh);
+  Promise.all(promises).then(function() {
+    var audioStream = null;
+    if (audioCtx) {
+      try { var dest=audioCtx.createMediaStreamDestination(); if(audioSrc)audioSrc.connect(dest); audioStream=dest.stream; } catch(e){}
     }
-    ctx.globalAlpha = 1;
-  } else if (visualizerType === 'wave' && analyser) {
-    const timeData = new Uint8Array(analyser.fftSize);
-    analyser.getByteTimeDomainData(timeData);
-    const col = document.getElementById('vizColor').value;
-    ctx.strokeStyle = col; ctx.lineWidth = 3;
-    ctx.shadowColor = col; ctx.shadowBlur = 10;
-    ctx.beginPath();
-    for (let i = 0; i < timeData.length; i++) {
-      const x = i / timeData.length * W;
-      const y = H - 40 - (timeData[i] / 128) * 35;
-      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-    }
-    ctx.stroke();
-    ctx.shadowBlur = 0;
-  }
-
-  // --- Text ---
-  const cur = lyrics[currentLineIdx] ?? '';
-  const prev = document.getElementById('showContext').checked ? (lyrics[currentLineIdx - 1] ?? '') : '';
-  const next = document.getElementById('showContext').checked ? (lyrics[currentLineIdx + 1] ?? '') : '';
-  const ff = document.getElementById('fontFamily').value.replace(/'/g,'');
-  const fs = parseInt(document.getElementById('fontSize').value) * (W / 400);
-  const fw = document.getElementById('fontWeight').value;
-  const tc = document.getElementById('textColor').value;
-  const sc = document.getElementById('subTextColor').value;
-  const ls = parseFloat(document.getElementById('letterSpacing').value);
-  const ta = document.getElementById('textAlign').value;
-  const shColor = document.getElementById('shadowColor').value;
-  const shBlur = parseInt(document.getElementById('shadowBlur').value) * (W / 400);
-  const stColor = document.getElementById('strokeColor').value;
-  const stW = parseFloat(document.getElementById('strokeWidth').value) * (W / 400);
-
-  ctx.textAlign = ta === 'center' ? 'center' : ta === 'right' ? 'right' : 'left';
-  const tx = ta === 'center' ? W/2 : ta === 'right' ? W*0.9 : W*0.1;
-
-  // Sub lines (prev/next)
-  if (prev) {
-    ctx.font = `${fw} ${Math.round(fs*0.6)}px ${ff}`;
-    ctx.fillStyle = sc;
-    ctx.globalAlpha = 0.5;
-    ctx.fillText(prev, tx, H/2 - fs * 1.2, W * 0.85);
-    ctx.globalAlpha = 1;
-  }
-  if (next) {
-    ctx.font = `${fw} ${Math.round(fs*0.6)}px ${ff}`;
-    ctx.fillStyle = sc;
-    ctx.globalAlpha = 0.5;
-    ctx.fillText(next, tx, H/2 + fs * 1.6, W * 0.85);
-    ctx.globalAlpha = 1;
-  }
-
-  // Main lyric
-  ctx.font = `${fw} ${Math.round(fs)}px ${ff}`;
-  ctx.shadowColor = shColor;
-  ctx.shadowBlur = shBlur;
-
-  const grad = textGrad;
-  if (grad !== 'none') {
-    const grads = {
-      'white': ['#fff','#aaa'],
-      'purple-cyan': ['#a855f7','#06b6d4'],
-      'gold-red': ['#f59e0b','#ef4444'],
-      'green-cyan': ['#22c55e','#06b6d4'],
-      'pink-gold': ['#ec4899','#f59e0b'],
+    var vstream = exportCanvas.captureStream(30);
+    var tracks = Array.from(vstream.getVideoTracks());
+    if (audioStream) audioStream.getAudioTracks().forEach(function(t){tracks.push(t);});
+    var combined = new MediaStream(tracks);
+    var mimes = ['video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm'];
+    var mime = mimes.find(function(m){return MediaRecorder.isTypeSupported(m);}) || '';
+    var chunks = [];
+    exportRecorder = new MediaRecorder(combined, mime?{mimeType:mime}:{});
+    exportRecorder.ondataavailable = function(ev){if(ev.data.size>0)chunks.push(ev.data);};
+    exportRecorder.onstop = function() {
+      cancelAnimationFrame(exportRaf);
+      var blob = new Blob(chunks,{type:'video/webm'});
+      if (fmt==='mp4') { updateExpProg('🔄 MP4変換中...'); convertToMp4(blob); }
+      else {
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a'); a.href=url; a.download='lyrics-video.webm'; a.click();
+        showToast('✅ WebMをダウンロードしました');
+        hideExpProg();
+      }
     };
-    const [c1, c2] = grads[grad] || ['#fff','#fff'];
-    const g = ctx.createLinearGradient(W*0.1, 0, W*0.9, 0);
-    g.addColorStop(0, c1); g.addColorStop(1, c2);
-    ctx.fillStyle = g;
-  } else {
-    ctx.fillStyle = tc;
-  }
-
-  if (stW > 0) {
-    ctx.strokeStyle = stColor;
-    ctx.lineWidth = stW * 2;
-    ctx.strokeText(cur || '♪', tx, H/2 + fs*0.35, W * 0.9);
-  }
-  ctx.fillText(cur || '♪', tx, H/2 + fs*0.35, W * 0.9);
-  ctx.shadowBlur = 0;
-
-  exportRaf = requestAnimationFrame(renderExportFrame);
-}
-
-function drawParticlesOnCanvas(ctx, W, H) {
-  const col = document.getElementById('vizColor').value;
-  particles.forEach(p => {
-    ctx.globalAlpha = p.alpha * 0.6;
-    ctx.fillStyle = col;
-    ctx.beginPath();
-    ctx.arc(p.x * W, p.y * H, p.size * 2, 0, Math.PI * 2);
-    ctx.fill();
+    curIdx = -1; audioEl.currentTime = 0;
+    exportRecorder.start(200);
+    audioEl.play(); isPlaying=true; document.getElementById('playBtn').textContent='⏸';
+    if (audioCtx && audioCtx.state==='suspended') audioCtx.resume();
+    showExpProg();
+    drawExportFrame();
+    audioEl.addEventListener('ended', function onEnd() {
+      audioEl.removeEventListener('ended', onEnd);
+      setTimeout(function(){ exportRecorder.stop(); isPlaying=false; document.getElementById('playBtn').textContent='▶'; }, 400);
+    });
   });
-  ctx.globalAlpha = 1;
+}
+function drawExportFrame() {
+  var W=1280, H=720;
+  var ctx = exportCtx;
+  exportFrameN++;
+  var t = exportFrameN / 30;
+
+  // BG
+  if (bgType==='solid') {
+    ctx.fillStyle = document.getElementById('bgColor').value;
+    ctx.fillRect(0,0,W,H);
+  } else if (bgType==='gradient') {
+    var c1=document.getElementById('grad1').value, c2=document.getElementById('grad2').value;
+    var grd=ctx.createLinearGradient(0,0,W,H); grd.addColorStop(0,c1); grd.addColorStop(1,c2);
+    ctx.fillStyle=grd; ctx.fillRect(0,0,W,H);
+  } else if (bgType==='media' && layers.length>0) {
+    drawExportBg(ctx,W,H,t);
+  } else {
+    ctx.fillStyle='#000'; ctx.fillRect(0,0,W,H);
+  }
+
+  // Overlay
+  var oo = document.getElementById('overlayOpac').value/100;
+  if (oo>0) { ctx.fillStyle=hexRgba(document.getElementById('overlayColor').value,oo); ctx.fillRect(0,0,W,H); }
+
+  // Visualizer bar
+  if (visType==='bar' && analyser) {
+    var fdata = new Uint8Array(analyser.frequencyBinCount);
+    analyser.getByteFrequencyData(fdata);
+    var vcol = document.getElementById('vizColor').value;
+    ctx.fillStyle=vcol; ctx.globalAlpha=.5;
+    var bw=W/32;
+    for (var vi=0;vi<32;vi++) {
+      var bh=(fdata[Math.floor(vi*fdata.length/32)]/255)*60+4;
+      ctx.fillRect(vi*bw+1,H-bh,bw-2,bh);
+    }
+    ctx.globalAlpha=1;
+  }
+
+  // Text
+  var curTxt = lyrics[curIdx] || '';
+  var ff2 = document.getElementById('fontFam').value.replace(/'/g,'');
+  var fs2 = parseInt(document.getElementById('fontSize').value)*(W/400);
+  var fw2 = document.getElementById('fontW').value;
+  var tc2 = document.getElementById('textColor').value;
+  var ta2 = document.getElementById('textAlign').value;
+  var shC2 = document.getElementById('shadowColor').value;
+  var shB2 = parseInt(document.getElementById('shadowBlur').value)*(W/400);
+  var stC2 = document.getElementById('strokeColor').value;
+  var stW2 = parseFloat(document.getElementById('strokeW').value)*(W/400);
+  ctx.textAlign = ta2==='center'?'center':ta2==='right'?'right':'left';
+  var tx = ta2==='center'?W/2:ta2==='right'?W*.9:W*.1;
+  ctx.font = fw2+' '+Math.round(fs2)+'px '+ff2;
+  ctx.shadowColor=shC2; ctx.shadowBlur=shB2;
+  var gmap = {'none':null,'white':['#fff','#aaa'],'pc':['#a855f7','#06b6d4'],'gr':['#f59e0b','#ef4444'],'gc':['#22c55e','#06b6d4'],'pg':['#ec4899','#f59e0b']};
+  if (textGrad!=='none' && gmap[textGrad]) {
+    var g2=ctx.createLinearGradient(W*.1,0,W*.9,0);
+    g2.addColorStop(0,gmap[textGrad][0]); g2.addColorStop(1,gmap[textGrad][1]);
+    ctx.fillStyle=g2;
+  } else { ctx.fillStyle=tc2; }
+  if (stW2>0) { ctx.strokeStyle=stC2; ctx.lineWidth=stW2*2; ctx.strokeText(curTxt||'♪',tx,H/2+fs2*.35,W*.9); }
+  ctx.fillText(curTxt||'♪',tx,H/2+fs2*.35,W*.9);
+  ctx.shadowBlur=0;
+
+  exportRaf = requestAnimationFrame(drawExportFrame);
+}
+function drawExportBg(ctx, W, H, t) {
+  var idx2 = Math.min(curLayerIdx, layers.length-1);
+  var layer = layers[idx2];
+  if (!layer) { ctx.fillStyle='#000';ctx.fillRect(0,0,W,H); return; }
+  var speed = layer.motionSpeed||1;
+  ctx.save(); ctx.translate(W/2,H/2);
+  var sc=1, tx2=0, ty2=0;
+  var s=t*speed;
+  switch(layer.motion) {
+    case 'zoomIn': sc=1+Math.min(s/30,1)*.2; break;
+    case 'zoomOut': sc=Math.max(1,1.2-Math.min(s/30,1)*.2); break;
+    case 'panL': sc=1.2; tx2=-Math.sin(s/15*Math.PI)*W*.05; break;
+    case 'panR': sc=1.2; tx2=Math.sin(s/15*Math.PI)*W*.05; break;
+    case 'panU': sc=1.2; ty2=-Math.sin(s/15*Math.PI)*H*.05; break;
+    case 'panD': sc=1.2; ty2=Math.sin(s/15*Math.PI)*H*.05; break;
+    case 'ken': sc=1+Math.sin((s%30)/30*Math.PI)*.15; tx2=Math.cos((s%30)/30*Math.PI*2)*W*.03; ty2=Math.sin((s%30)/30*Math.PI*1.5)*H*.03; break;
+    case 'pulse': sc=1+Math.sin(s*2*Math.PI/3)*.05; break;
+    case 'wave': sc=1.1; ty2=Math.sin(s*2*Math.PI/4)*H*.02; break;
+    default: sc=1;
+  }
+  ctx.scale(sc,sc); ctx.translate(tx2/sc,ty2/sc);
+  if (layer.type==='image' && exportBgImgs[layer.id]) {
+    var img2=exportBgImgs[layer.id];
+    var iar=img2.naturalWidth/img2.naturalHeight, car=W/H;
+    var dw,dh;
+    if (iar>car) { dh=H; dw=dh*iar; } else { dw=W; dh=dw/iar; }
+    ctx.drawImage(img2,-dw/2,-dh/2,dw,dh);
+  } else { ctx.fillStyle='#222'; ctx.fillRect(-W/2,-H/2,W,H); }
+  ctx.restore();
+  ctx.fillStyle='rgba(0,0,0,'+layer.dim/100+')'; ctx.fillRect(0,0,W,H);
 }
 
-function showExportProgress() {
-  const el = document.createElement('div');
-  el.id = 'exportProgress';
-  el.style.cssText = `position:fixed;bottom:70px;left:50%;transform:translateX(-50%);
-    background:var(--panel);border:1px solid var(--accent);border-radius:10px;
-    padding:14px 24px;z-index:9999;font-family:'Space Mono',monospace;font-size:12px;
-    color:var(--accent2);display:flex;align-items:center;gap:12px;`;
-  el.innerHTML = `<span style="animation:spin 1s linear infinite;display:inline-block">⏺</span> 録画中... 音楽終了で自動停止します
-    <button onclick="stopRecordingEarly()" style="background:var(--red);border:none;color:white;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:11px;">停止</button>`;
-  document.body.appendChild(el);
-  // spin anim
-  const style = document.createElement('style');
-  style.textContent = '@keyframes spin{to{transform:rotate(360deg)}}';
-  document.head.appendChild(style);
-}
-
-function hideExportProgress() {
-  document.getElementById('exportProgress')?.remove();
-}
-
-function stopRecordingEarly() {
-  if (exportRecorder && exportRecorder.state !== 'inactive') {
-    exportRecorder.stop();
-    audioEl.pause();
-    isPlaying = false;
-    document.getElementById('playBtn').textContent = '▶';
-    hideExportProgress();
+async function convertToMp4(blob) {
+  try {
+    var mod = await import('https://unpkg.com/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.esm.js');
+    var ffmpeg = mod.createFFmpeg({ log:false, corePath:'https://unpkg.com/@ffmpeg/core@0.11.0/dist/ffmpeg-core.js' });
+    updateExpProg('📦 FFmpegを読み込み中...');
+    await ffmpeg.load();
+    updateExpProg('🎬 MP4に変換中...');
+    ffmpeg.FS('writeFile','input.webm', await mod.fetchFile(blob));
+    await ffmpeg.run('-i','input.webm','-c:v','libx264','-preset','fast','-crf','22','-c:a','aac','-b:a','192k','-movflags','+faststart','output.mp4');
+    var data2 = ffmpeg.FS('readFile','output.mp4');
+    var mp4blob = new Blob([data2.buffer],{type:'video/mp4'});
+    var url2 = URL.createObjectURL(mp4blob);
+    var a2 = document.createElement('a'); a2.href=url2; a2.download='lyrics-video.mp4'; a2.click();
+    showToast('✅ MP4をダウンロードしました');
+    hideExpProg();
+  } catch(err) {
+    console.error(err);
+    showToast('⚠️ MP4変換失敗。WebMとして保存します');
+    hideExpProg();
+    var url3=URL.createObjectURL(blob);
+    var a3=document.createElement('a'); a3.href=url3; a3.download='lyrics-video.webm'; a3.click();
   }
 }
-
-// ===== FALLBACK: Frame sequence export =====
-function exportFrameSequence() {
-  document.getElementById('exportModal')?.remove();
-  showToast('⚠️ Chrome/Edgeで直接ファイルを開くと動画録画が使えます');
-  // Show instruction modal
-  const modal = document.createElement('div');
-  modal.className = 'modal-overlay';
-  modal.innerHTML = `
-    <div class="modal">
-      <h3>📋 録画できない場合の対処法</h3>
-      <p style="font-size:13px;line-height:1.8;">
-        このアプリはブラウザのキャプチャAPI（captureStream）を使って動画を作成します。<br><br>
-        <b style="color:var(--accent2)">対応ブラウザ：</b><br>
-        ✅ Google Chrome（推奨）<br>
-        ✅ Microsoft Edge<br>
-        ❌ Firefox / Safari / iFrame内では非対応<br><br>
-        <b style="color:var(--accent2)">解決方法：</b><br>
-        1. このHTMLファイルをダウンロード<br>
-        2. Chromeで直接開く（ファイル://...）<br>
-        3. EXPORTボタンを押す
-      </p>
-      <div class="modal-actions">
-        <button class="btn btn-primary" onclick="this.closest('.modal-overlay').remove()">OK</button>
-      </div>
-    </div>`;
-  document.body.appendChild(modal);
+function showExpProg() {
+  var el = document.createElement('div');
+  el.id = 'expProg';
+  el.className = 'exp-prog';
+  el.innerHTML = '<span id="expIcon" style="display:inline-block;animation:spin 1s linear infinite">⏺</span><span id="expMsg">🔴 録画中... 音楽終了で自動停止</span><button class="exp-stop" onclick="stopExport()">停止</button>';
+  document.body.appendChild(el);
+}
+function updateExpProg(msg) { var el=document.getElementById('expMsg'); if(el)el.textContent=msg; }
+function hideExpProg() { var el=document.getElementById('expProg'); if(el)el.remove(); }
+function stopExport() {
+  if (exportRecorder && exportRecorder.state!=='inactive') exportRecorder.stop();
+  audioEl.pause(); isPlaying=false; document.getElementById('playBtn').textContent='▶';
+  hideExpProg();
 }
 
-// ===== HELP =====
-function showHelp() {
-  const modal = document.createElement('div');
-  modal.className = 'modal-overlay';
-  modal.innerHTML = `
-    <div class="modal">
-      <h3>📖 使い方</h3>
-      <p>
-        <b style="color:var(--accent2)">① 音声アップロード</b><br>
-        左パネルで音楽ファイル（MP3/WAV等）をアップロード<br><br>
-        <b style="color:var(--accent2)">② 歌詞入力</b><br>
-        1行ずつ歌詞を入力してください<br><br>
-        <b style="color:var(--accent2)">③ タイムコード設定</b><br>
-        「⚡ 均等タイムコード自動設定」ボタンで自動設定、または再生しながら各行の⏱ボタンで手動設定<br><br>
-        <b style="color:var(--accent2)">④ スタイル編集</b><br>
-        右パネルでデザインをカスタマイズ<br><br>
-        <b style="color:var(--accent2)">⑤ エクスポート</b><br>
-        「EXPORT VIDEO」でWebM動画として保存
-      </p>
-      <div class="modal-actions">
-        <button class="btn btn-primary" onclick="this.closest('.modal-overlay').remove()">OK</button>
-      </div>
-    </div>`;
-  document.body.appendChild(modal);
+// ===========================
+// UTILS
+// ===========================
+function hexRgba(hex, a) {
+  var r=parseInt(hex.slice(1,3),16), g=parseInt(hex.slice(3,5),16), b=parseInt(hex.slice(5,7),16);
+  return 'rgba('+r+','+g+','+b+','+a+')';
 }
-
-// ===== UTILS =====
-function hexToRgba(hex, a) {
-  const r = parseInt(hex.slice(1,3),16);
-  const g = parseInt(hex.slice(3,5),16);
-  const b = parseInt(hex.slice(5,7),16);
-  return `rgba(${r},${g},${b},${a})`;
-}
-
 function showToast(msg) {
-  document.querySelectorAll('.toast').forEach(t => t.remove());
-  const t = document.createElement('div');
-  t.className = 'toast';
-  t.textContent = msg;
+  document.querySelectorAll('.toast').forEach(function(t){t.remove();});
+  var t = document.createElement('div');
+  t.className='toast'; t.textContent=msg;
   document.body.appendChild(t);
-  setTimeout(() => t.remove(), 2600);
+  setTimeout(function(){t.remove();}, 2600);
+}
+function showHelp() {
+  var m = document.createElement('div');
+  m.className='modal-overlay';
+  m.innerHTML='<div class="modal"><h3>📖 使い方</h3><p style="font-size:13px;line-height:1.9"><b style="color:var(--accent2)">① 音声アップロード</b><br>左パネルで音楽ファイルをアップロード<br><br><b style="color:var(--accent2)">② 歌詞入力</b><br>1行ずつ歌詞を入力<br><br><b style="color:var(--accent2)">③ タイムコード設定</b><br>⚡自動設定 or 再生中に⏱をクリック<br><br><b style="color:var(--accent2)">④ スタイル編集</b><br>右パネルでデザインをカスタマイズ<br><br><b style="color:var(--accent2)">⑤ エクスポート</b><br>WebM or MP4で保存（Chrome推奨）</p><div class="modal-actions"><button class="btn btn-primary" onclick="this.closest(\'.modal-overlay\').remove()">OK</button></div></div>';
+  document.body.appendChild(m);
 }
 
-// ===== DRAG DROP =====
-const audioZone = document.getElementById('audioZone');
-audioZone.addEventListener('dragover', e => { e.preventDefault(); audioZone.classList.add('active'); });
-audioZone.addEventListener('dragleave', () => audioZone.classList.remove('active'));
-audioZone.addEventListener('drop', e => {
-  e.preventDefault();
-  audioZone.classList.remove('active');
-  const file = e.dataTransfer.files[0];
+// Drag & drop audio file onto page
+document.getElementById('audioZone').addEventListener('dragover', function(e){e.preventDefault();this.style.borderColor='var(--accent2)';});
+document.getElementById('audioZone').addEventListener('dragleave', function(){this.style.borderColor='';});
+document.getElementById('audioZone').addEventListener('drop', function(e){
+  e.preventDefault(); this.style.borderColor='';
+  var file=e.dataTransfer.files[0];
   if (file && file.type.startsWith('audio/')) {
-    const dt = new DataTransfer();
-    dt.items.add(file);
-    document.getElementById('audioInput').files = dt.files;
-    handleAudioUpload({ target: { files: dt.files } });
+    var dt=new DataTransfer(); dt.items.add(file);
+    document.getElementById('audioInput').files=dt.files;
+    handleAudioUpload({target:{files:dt.files}});
   }
 });
 
-// ===== INIT =====
-document.documentElement.style.setProperty('--anim-dur', '0.5s');
-document.documentElement.style.setProperty('--loop-dur', '2s');
-updateStyles();
-showLine(-1);
-resizeWaveCanvas();
-window.addEventListener('resize', resizeWaveCanvas);
+// Drop files onto layer list
+document.getElementById('layerList').addEventListener('dragover', function(e){
+  e.preventDefault(); this.classList.add('drag-over');
+});
+document.getElementById('layerList').addEventListener('dragleave', function(){this.classList.remove('drag-over');});
+document.getElementById('layerList').addEventListener('drop', function(e){
+  e.preventDefault(); this.classList.remove('drag-over');
+  var files = Array.from(e.dataTransfer.files || []);
+  var added = 0;
+  files.forEach(function(file){
+    if (file.type.startsWith('image/') || file.type.startsWith('video/')) {
+      var type = file.type.startsWith('video/') ? 'video' : 'image';
+      var url = URL.createObjectURL(file);
+      layers.push({id:Date.now()+Math.random(),type:type,name:file.name,data:url,objectURL:url,motion:'none',motionSpeed:1,dim:40,blur:0,opacity:100,transition:'fade',durationMode:'equal',durationSec:10});
+      added++;
+    }
+  });
+  if (added>0) { renderLayers(); selLayer(layers.length-1); applyBg(); showToast(added+'個のファイルを追加しました'); }
+});
 
-// sample lyrics on load
-document.getElementById('lyricsInput').value = `夜空に輝く星よ
-その光よ消えないで
-遠い記憶の中の
-あの日の笑顔が見える
-時の流れに乗せて
-届けたい想いがある
-いつまでも忘れない
-あなたのことを`;
+// ===========================
+// INIT
+// ===========================
+document.documentElement.style.setProperty('--anim-dur','0.5s');
+document.documentElement.style.setProperty('--loop-dur','2s');
+resizeWcanvas();
+window.addEventListener('resize', resizeWcanvas);
+showLine(-1); applyText();
+
+document.getElementById('lyricsInput').value = '夜空に輝く星よ\nその光よ消えないで\n遠い記憶の中の\nあの日の笑顔が見える\n時の流れに乗せて\n届けたい想いがある\nいつまでも忘れない\nあなたのことを';
 parseLyrics();
-autoAssignTimecodes();
+autoTimecodes();
 </script>
 </body>
 </html>
