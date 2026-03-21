@@ -274,6 +274,43 @@ input[type=color]{width:32px;height:24px;border:none;border-radius:4px;cursor:po
 ::-webkit-scrollbar{width:4px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+/* === THUMBNAIL & YOUTUBE UPLOAD === */
+.yt-modal-wrap{position:fixed;inset:0;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;z-index:2000;backdrop-filter:blur(8px)}
+.yt-modal{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:26px;max-width:540px;width:95%;max-height:92vh;overflow-y:auto}
+.yt-modal h3{font-size:16px;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.yt-field{margin-bottom:12px}
+.yt-field label{display:block;font-size:10px;color:var(--text2);letter-spacing:1.5px;margin-bottom:5px;font-family:'Space Mono',monospace;text-transform:uppercase}
+.yt-field input,.yt-field textarea,.yt-field select{width:100%;background:var(--panel2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:8px 12px;font-size:13px;font-family:'Noto Sans JP',sans-serif;outline:none;transition:border-color .2s}
+.yt-field input:focus,.yt-field textarea:focus,.yt-field select:focus{border-color:var(--accent)}
+.yt-field textarea{resize:vertical;min-height:70px;line-height:1.6}
+.yt-field select{cursor:pointer}
+.yt-auth-btn{width:100%;padding:10px;border:none;border-radius:8px;color:white;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity .2s;margin-bottom:8px}
+.yt-auth-btn:hover{opacity:.88}
+.yt-auth-btn.google{background:linear-gradient(135deg,#4285f4,#34a853)}
+.yt-auth-btn.reauth{background:rgba(66,133,244,.15);border:1px solid #4285f4;color:#4285f4;font-size:11px;padding:6px}
+.yt-upload-btn{width:100%;padding:12px;border:none;border-radius:10px;color:white;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:1px;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity .2s;background:linear-gradient(135deg,#ff0000,#c00000)}
+.yt-upload-btn:hover:not(:disabled){opacity:.88}
+.yt-upload-btn:disabled{opacity:.4;cursor:default}
+.yt-prog-bar{height:6px;background:var(--border);border-radius:3px;margin:10px 0;overflow:hidden}
+.yt-prog-fill{height:100%;background:linear-gradient(90deg,#ff0000,#ff6b6b);border-radius:3px;transition:width .3s}
+.yt-status{font-family:'Space Mono',monospace;font-size:11px;color:var(--text2);text-align:center;margin-top:4px}
+.yt-success{font-size:13px;text-align:center;padding:14px;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);border-radius:8px;color:var(--green)}
+.yt-divider{border:none;border-top:1px solid var(--border);margin:14px 0}
+.auth-badge{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;font-size:12px;font-family:'Space Mono',monospace;margin-bottom:10px}
+.auth-badge.ok{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);color:var(--green)}
+.auth-badge.ng{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:var(--red)}
+.auth-badge.warn{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);color:#f59e0b}
+.thumb-preview-img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:8px;border:1px solid var(--border);margin-bottom:10px;background:#000;display:block}
+.yt-btn-row{display:flex;gap:8px;margin-bottom:10px}
+.yt-hint{position:fixed;bottom:24px;right:24px;background:var(--panel);border:1px solid var(--accent);border-radius:12px;padding:14px 18px;z-index:1500;display:flex;align-items:center;gap:12px;box-shadow:0 8px 32px rgba(0,0,0,.6);animation:toastIn .4s ease}
+.yt-hint-close{cursor:pointer;color:var(--text2);font-size:16px;line-height:1;opacity:.7}
+.yt-hint-close:hover{opacity:1}
+.sub-btn-row{display:flex;gap:6px;padding:0 16px 8px}
+.sub-btn{flex:1;padding:8px 4px;background:var(--panel2);border:1px solid var(--border);color:var(--text2);border-radius:8px;font-size:11px;cursor:pointer;transition:all .2s;text-align:center}
+.sub-btn:hover{border-color:var(--accent);color:var(--text);background:rgba(124,58,237,.1)}
+.sub-btn.yt{border-color:rgba(255,0,0,.3);color:#ff6b6b}
+.sub-btn.yt:hover{background:rgba(255,0,0,.1);border-color:#ff0000}
 </style>
 </head>
 <body>
@@ -645,6 +682,10 @@ input[type=color]{width:32px;height:24px;border:none;border-radius:4px;cursor:po
   </div>
 
   <button class="export-btn" onclick="exportVideo()">🎬 EXPORT VIDEO</button>
+  <div class="sub-btn-row">
+    <button class="sub-btn" onclick="showThumbnailModal()">🖼 サムネイル生成</button>
+    <button class="sub-btn yt" onclick="showYouTubeUploadModal()">▶ YouTube Upload</button>
+  </div>
   <div style="padding:0 16px 20px;text-align:center;font-size:10px;color:var(--text2);line-height:1.6">
     WebM（即時）またはMP4（FFmpeg変換）<br>Chrome / Edge 推奨
   </div>
@@ -1565,12 +1606,14 @@ function startRec(fmt) {
     exportRecorder.onstop = function() {
       cancelAnimationFrame(exportRaf);
       var blob = new Blob(chunks,{type:'video/webm'});
+      exportedBlob = blob;
       if (fmt==='mp4') { updateExpProg('🔄 MP4変換中...'); convertToMp4(blob); }
       else {
         var url = URL.createObjectURL(blob);
         var a = document.createElement('a'); a.href=url; a.download='lyrics-video.webm'; a.click();
         showToast('✅ WebMをダウンロードしました');
         hideExpProg();
+        showYTUploadHint();
       }
     };
     curIdx = -1; audioEl.currentTime = 0;
@@ -1697,6 +1740,7 @@ async function convertToMp4(blob) {
     var a2 = document.createElement('a'); a2.href=url2; a2.download='lyrics-video.mp4'; a2.click();
     showToast('✅ MP4をダウンロードしました');
     hideExpProg();
+    showYTUploadHint();
   } catch(err) {
     console.error(err);
     showToast('⚠️ MP4変換失敗。WebMとして保存します');
@@ -1773,6 +1817,446 @@ document.getElementById('layerList').addEventListener('drop', function(e){
   });
   if (added>0) { renderLayers(); selLayer(layers.length-1); applyBg(); showToast(added+'個のファイルを追加しました'); }
 });
+
+// ===========================
+// THUMBNAIL GENERATION
+// ===========================
+var exportedBlob = null;
+var thumbnailDataUrl = null;
+var ytAccessToken = null;
+var thumbSongTitle = '';
+var thumbArtistName = '';
+
+function showThumbnailModal() {
+  buildThumbnailCanvas(function(canvas) {
+    thumbnailDataUrl = canvas.toDataURL('image/jpeg', 0.92);
+    _renderThumbModal();
+  });
+}
+
+function buildThumbnailCanvas(cb) {
+  var W = 1280, H = 720;
+  var canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  var ctx = canvas.getContext('2d');
+
+  function finish() {
+    var oo = document.getElementById('overlayOpac').value / 100;
+    if (oo > 0) { ctx.fillStyle = hexRgba(document.getElementById('overlayColor').value, oo); ctx.fillRect(0,0,W,H); }
+    _drawThumbText(ctx, W, H);
+    cb(canvas);
+  }
+
+  if (bgType === 'solid') {
+    ctx.fillStyle = document.getElementById('bgColor').value;
+    ctx.fillRect(0, 0, W, H); finish();
+  } else if (bgType === 'gradient') {
+    var c1 = document.getElementById('grad1').value, c2 = document.getElementById('grad2').value;
+    var grd = ctx.createLinearGradient(0, 0, W, H);
+    grd.addColorStop(0, c1); grd.addColorStop(1, c2);
+    ctx.fillStyle = grd; ctx.fillRect(0, 0, W, H); finish();
+  } else if (bgType === 'particle') {
+    ctx.fillStyle = document.getElementById('ptBgColor').value || '#000000';
+    ctx.fillRect(0, 0, W, H); finish();
+  } else if (bgType === 'media' && layers.length > 0) {
+    var layer = layers[Math.min(curLayerIdx, layers.length - 1)];
+    if (layer && layer.type === 'image') {
+      var img = new Image();
+      img.onload = function() {
+        var iar = img.naturalWidth / img.naturalHeight, car = W / H;
+        var dw, dh;
+        if (iar > car) { dh = H; dw = dh * iar; } else { dw = W; dh = dw / iar; }
+        ctx.drawImage(img, (W - dw) / 2, (H - dh) / 2, dw, dh);
+        ctx.fillStyle = 'rgba(0,0,0,' + (layer.dim / 100) + ')';
+        ctx.fillRect(0, 0, W, H);
+        finish();
+      };
+      img.onerror = function() { ctx.fillStyle = '#111'; ctx.fillRect(0, 0, W, H); finish(); };
+      img.crossOrigin = 'anonymous';
+      img.src = layer.data;
+    } else {
+      ctx.fillStyle = '#111'; ctx.fillRect(0, 0, W, H); finish();
+    }
+  } else {
+    ctx.fillStyle = '#0a0a0f'; ctx.fillRect(0, 0, W, H); finish();
+  }
+}
+
+function _drawThumbText(ctx, W, H) {
+  var title  = thumbSongTitle.trim();
+  var artist = thumbArtistName.trim();
+  if (!title && !artist) return;
+
+  var ff  = document.getElementById('fontFam').value.replace(/'/g, '');
+  var fw  = document.getElementById('fontW').value;
+  var tc  = document.getElementById('textColor').value;
+  var shC = document.getElementById('shadowColor').value;
+  var shB = parseInt(document.getElementById('shadowBlur').value) * (W / 400);
+  var stC = document.getElementById('strokeColor').value;
+  var stW = parseFloat(document.getElementById('strokeW').value) * (W / 400);
+  var gmap = {'none':null,'white':['#fff','#aaa'],'pc':['#a855f7','#06b6d4'],'gr':['#f59e0b','#ef4444'],'gc':['#22c55e','#06b6d4'],'pg':['#ec4899','#f59e0b']};
+
+  // タイトルのフォントサイズ（基準）
+  var titleFs = Math.round(parseInt(document.getElementById('fontSize').value) * (W / 400));
+  // タイトルと歌手名を両方表示する場合の縦位置を計算
+  var hasArtist = artist.length > 0;
+  var titleY  = hasArtist ? H * 0.46 : H / 2 + titleFs * 0.35;
+  var sepY    = titleY + titleFs * 0.6;
+  var artistY = sepY + titleFs * 0.55;
+
+  ctx.textAlign = 'center';
+
+  // ---- タイトル描画 ----
+  if (title) {
+    ctx.font = fw + ' ' + titleFs + 'px ' + ff;
+    ctx.shadowColor = shC; ctx.shadowBlur = shB;
+    if (textGrad !== 'none' && gmap[textGrad]) {
+      var g = ctx.createLinearGradient(W * 0.1, 0, W * 0.9, 0);
+      g.addColorStop(0, gmap[textGrad][0]); g.addColorStop(1, gmap[textGrad][1]);
+      ctx.fillStyle = g;
+    } else { ctx.fillStyle = tc; }
+    if (stW > 0) { ctx.strokeStyle = stC; ctx.lineWidth = stW * 2; ctx.strokeText(title, W / 2, titleY, W * 0.85); }
+    ctx.fillText(title, W / 2, titleY, W * 0.85);
+    ctx.shadowBlur = 0;
+  }
+
+  // ---- セパレーター（タイトル＋歌手名の両方がある場合のみ） ----
+  if (title && hasArtist) {
+    var sepW = Math.min(260, W * 0.22);
+    if (textGrad !== 'none' && gmap[textGrad]) {
+      var sg = ctx.createLinearGradient(W / 2 - sepW / 2, 0, W / 2 + sepW / 2, 0);
+      sg.addColorStop(0, gmap[textGrad][0]); sg.addColorStop(1, gmap[textGrad][1]);
+      ctx.strokeStyle = sg;
+    } else { ctx.strokeStyle = tc; }
+    ctx.globalAlpha = 0.5;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(W / 2 - sepW / 2, sepY);
+    ctx.lineTo(W / 2 + sepW / 2, sepY);
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+
+  // ---- 歌手名描画 ----
+  if (hasArtist) {
+    var artistFs = Math.round(titleFs * 0.42);
+    ctx.font = '400 ' + artistFs + 'px ' + ff;
+    ctx.shadowColor = shC; ctx.shadowBlur = Math.round(shB * 0.5);
+    ctx.fillStyle = tc;
+    ctx.globalAlpha = 0.85;
+    ctx.fillText(artist, W / 2, artistY, W * 0.7);
+    ctx.globalAlpha = 1;
+    ctx.shadowBlur = 0;
+  }
+}
+
+function _renderThumbModal() {
+  document.querySelectorAll('.yt-modal-wrap').forEach(function(m){m.remove();});
+  var modal = document.createElement('div');
+  modal.className = 'yt-modal-wrap';
+  modal.innerHTML = '<div class="yt-modal">'
+    + '<h3>🖼 サムネイル生成</h3>'
+    + '<img class="thumb-preview-img" id="thumbImg" src="' + thumbnailDataUrl + '">'
+    + '<div class="yt-field"><label>曲タイトル</label>'
+    + '<input type="text" id="thumbTitleInput" placeholder="曲のタイトルを入力" value="' + _escAttr(thumbSongTitle) + '"></div>'
+    + '<div class="yt-field"><label>歌手名 / アーティスト名</label>'
+    + '<input type="text" id="thumbArtistInput" placeholder="アーティスト名を入力" value="' + _escAttr(thumbArtistName) + '"></div>'
+    + '<div class="yt-btn-row">'
+    + '<button class="pbtn" style="flex:1;margin:0" onclick="refreshThumb()">🔄 再生成</button>'
+    + '<button class="pbtn" style="flex:1;margin:0" onclick="downloadThumbnail()">💾 ダウンロード</button>'
+    + '</div>'
+    + '<hr class="yt-divider">'
+    + '<div style="display:flex;gap:10px;justify-content:flex-end">'
+    + '<button class="btn btn-ghost" onclick="this.closest(\'.yt-modal-wrap\').remove()">閉じる</button>'
+    + '<button class="btn btn-primary" onclick="this.closest(\'.yt-modal-wrap\').remove();showYouTubeUploadModal()">▶ YouTubeアップロードへ</button>'
+    + '</div>'
+    + '</div>';
+  document.body.appendChild(modal);
+}
+
+function _escAttr(s) {
+  return (s || '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function refreshThumb() {
+  var titleEl  = document.getElementById('thumbTitleInput');
+  var artistEl = document.getElementById('thumbArtistInput');
+  if (titleEl)  thumbSongTitle  = titleEl.value;
+  if (artistEl) thumbArtistName = artistEl.value;
+  buildThumbnailCanvas(function(canvas) {
+    thumbnailDataUrl = canvas.toDataURL('image/jpeg', 0.92);
+    var img = document.getElementById('thumbImg');
+    if (img) img.src = thumbnailDataUrl;
+    showToast('サムネイルを再生成しました');
+  });
+}
+
+function downloadThumbnail() {
+  if (!thumbnailDataUrl) { showThumbnailModal(); return; }
+  var a = document.createElement('a');
+  a.href = thumbnailDataUrl; a.download = 'thumbnail.jpg'; a.click();
+  showToast('✅ サムネイルをダウンロードしました');
+}
+
+// ===========================
+// YOUTUBE UPLOAD
+// ===========================
+
+function showYouTubeUploadModal() {
+  document.querySelectorAll('.yt-modal-wrap').forEach(function(m){m.remove();});
+  var clientId = localStorage.getItem('yt_client_id') || '';
+  var hasAuth = !!ytAccessToken;
+  var hasVideo = !!exportedBlob;
+
+  var modal = document.createElement('div');
+  modal.className = 'yt-modal-wrap';
+  modal.innerHTML = '<div class="yt-modal">'
+    + '<h3><span style="color:#ff0000;font-size:20px">▶</span> YouTubeにアップロード</h3>'
+
+    // Google Client ID
+    + '<div class="yt-field"><label>Google OAuth 2.0 Client ID</label>'
+    + '<input type="text" id="ytClientId" placeholder="xxxxxxxxxx.apps.googleusercontent.com" value="' + (clientId||'') + '">'
+    + '<div style="font-size:10px;color:var(--text2);margin-top:4px;line-height:1.6">'
+    + 'Google Cloud Console → YouTube Data API v3 を有効化 → OAuth 2.0 クライアントIDを作成<br>'
+    + '<span style="color:#f59e0b">⚠ ローカルサーバー（localhost）からのみ動作します</span></div></div>'
+
+    // Auth
+    + '<div class="auth-badge ' + (hasAuth ? 'ok' : 'ng') + '" id="ytAuthBadge">'
+    + (hasAuth ? '✅ 認証済み（再認証するには下のボタン）' : '🔒 未認証') + '</div>'
+    + '<button class="yt-auth-btn google" onclick="ytAuth()" id="ytAuthBtn"'
+    + (hasAuth ? ' style="display:none"' : '') + '>'
+    + '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57C23.36 18.35 22.56 15.5 22.56 12.25z" fill="#fff"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#fff"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#fff"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#fff"/></svg>'
+    + ' Googleアカウントで認証'
+    + '</button>'
+    + '<button class="yt-auth-btn reauth" onclick="ytAuth()" id="ytReauthBtn"'
+    + (!hasAuth ? ' style="display:none"' : '') + '>🔄 別アカウントで再認証</button>'
+
+    + '<hr class="yt-divider">'
+
+    // Video status
+    + '<div class="auth-badge ' + (hasVideo ? 'ok' : 'ng') + '">'
+    + (hasVideo ? '✅ エクスポート済み動画あり（' + (exportedBlob ? _fmtBytes(exportedBlob.size) : '') + '）'
+      : '⚠️ 未エクスポート — 先に「EXPORT VIDEO」を実行してください') + '</div>'
+
+    // Metadata
+    + '<div class="yt-field"><label>動画タイトル *</label>'
+    + '<input type="text" id="ytTitle" placeholder="歌詞動画タイトル" maxlength="100" value="' + (lyrics[0] ? lyrics[0].substring(0,60) + ' 歌詞動画' : '歌詞動画') + '"></div>'
+
+    + '<div class="yt-field"><label>説明</label>'
+    + '<textarea id="ytDesc" placeholder="動画の説明..." maxlength="5000">Lyrics video created with LYRIC MOTION</textarea></div>'
+
+    + '<div class="yt-field"><label>タグ（カンマ区切り）</label>'
+    + '<input type="text" id="ytTags" placeholder="歌詞動画, lyric video, music" value="歌詞動画, lyric video"></div>'
+
+    + '<div style="display:flex;gap:10px">'
+    + '<div class="yt-field" style="flex:1"><label>公開設定</label>'
+    + '<select id="ytPrivacy"><option value="private">🔒 非公開</option><option value="unlisted">🔗 限定公開</option><option value="public">🌐 公開</option></select></div>'
+    + '<div class="yt-field" style="flex:1"><label>カテゴリ</label>'
+    + '<select id="ytCategory"><option value="10">🎵 音楽</option><option value="22">🎭 ブログ</option><option value="24">🎪 エンタメ</option><option value="1">🎬 映画</option></select></div>'
+    + '</div>'
+
+    // Thumbnail
+    + '<hr class="yt-divider">'
+    + '<div style="font-size:10px;color:var(--text2);letter-spacing:1.5px;font-family:\'Space Mono\',monospace;text-transform:uppercase;margin-bottom:8px">THUMBNAIL</div>'
+    + (thumbnailDataUrl
+      ? '<img class="thumb-preview-img" src="' + thumbnailDataUrl + '" id="ytThumbPreview">'
+      : '<div style="background:var(--panel2);border:1px dashed var(--border);border-radius:8px;padding:20px;text-align:center;color:var(--text2);font-size:12px;margin-bottom:10px" id="ytThumbEmpty">サムネイル未生成</div>')
+    + '<button class="pbtn" style="margin-bottom:12px" onclick="_ytGenThumb()">🖼 サムネイルを' + (thumbnailDataUrl ? '再' : '') + '生成</button>'
+
+    // Upload button
+    + '<hr class="yt-divider">'
+    + '<button class="yt-upload-btn" id="ytUploadBtn" onclick="doYTUpload()"'
+    + (!hasAuth || !hasVideo ? ' disabled' : '') + '>▶ YouTubeにアップロード</button>'
+    + '<div id="ytProgWrap" style="display:none">'
+    + '<div class="yt-prog-bar"><div class="yt-prog-fill" id="ytProgFill" style="width:0%"></div></div>'
+    + '<div class="yt-status" id="ytStatusMsg">アップロード中...</div></div>'
+    + '<div id="ytSuccessMsg" style="display:none" class="yt-success"></div>'
+
+    + '<div style="display:flex;justify-content:flex-end;margin-top:14px">'
+    + '<button class="btn btn-ghost" onclick="this.closest(\'.yt-modal-wrap\').remove()">閉じる</button>'
+    + '</div>'
+    + '</div>';
+  document.body.appendChild(modal);
+}
+
+function _fmtBytes(b) {
+  return b > 1048576 ? (b/1048576).toFixed(1)+' MB' : (b/1024).toFixed(0)+' KB';
+}
+
+function _ytGenThumb() {
+  // YouTubeモーダルを閉じてサムネイルモーダルを開く（タイトル・アーティスト入力のため）
+  document.querySelectorAll('.yt-modal-wrap').forEach(function(m){m.remove();});
+  showThumbnailModal();
+}
+
+function ytAuth() {
+  var cidEl = document.getElementById('ytClientId');
+  var clientId = cidEl ? cidEl.value.trim() : (localStorage.getItem('yt_client_id') || '');
+  if (!clientId) { showToast('Google OAuth Client IDを入力してください'); return; }
+  localStorage.setItem('yt_client_id', clientId);
+
+  if (window.location.protocol === 'file:') {
+    alert('⚠️ ファイルをfile://で直接開いているためOAuth認証できません。\n\nVS Code Live Server等でローカルWebサーバーとして起動してください。\n例: http://localhost:5500/lyrics-video-creator_ver4.html\n\nGoogle Cloud ConsoleのリダイレクトURIに http://localhost:5500 を追加してください。');
+    return;
+  }
+
+  var redirectUri = window.location.origin + window.location.pathname;
+  var scope = 'https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/youtube';
+  var params = new URLSearchParams({
+    client_id: clientId,
+    redirect_uri: redirectUri,
+    response_type: 'token',
+    scope: scope,
+    include_granted_scopes: 'true',
+    prompt: 'select_account'
+  });
+  var authUrl = 'https://accounts.google.com/o/oauth2/v2/auth?' + params.toString();
+  var popup = window.open(authUrl, 'ytAuth', 'width=600,height=700,left=200,top=80');
+  if (!popup) { showToast('⚠️ ポップアップをブロックされました。ブラウザの設定で許可してください。'); return; }
+
+  var timer = setInterval(function() {
+    try {
+      if (popup.closed) { clearInterval(timer); return; }
+      var hash = popup.location.hash;
+      if (hash && hash.includes('access_token')) {
+        clearInterval(timer); popup.close();
+        var p2 = new URLSearchParams(hash.substring(1));
+        ytAccessToken = p2.get('access_token');
+        var badge = document.getElementById('ytAuthBadge');
+        var authBtn = document.getElementById('ytAuthBtn');
+        var reauthBtn = document.getElementById('ytReauthBtn');
+        var uploadBtn = document.getElementById('ytUploadBtn');
+        if (badge) { badge.className = 'auth-badge ok'; badge.textContent = '✅ 認証済み'; }
+        if (authBtn) authBtn.style.display = 'none';
+        if (reauthBtn) reauthBtn.style.display = 'block';
+        if (uploadBtn && exportedBlob) uploadBtn.disabled = false;
+        showToast('✅ YouTube認証成功！');
+      }
+    } catch(e) { /* cross-origin — wait */ }
+  }, 500);
+}
+
+async function doYTUpload() {
+  if (!ytAccessToken) { showToast('先にGoogleアカウントで認証してください'); return; }
+  if (!exportedBlob) { showToast('先に動画をエクスポートしてください'); return; }
+
+  var title = (document.getElementById('ytTitle').value || '歌詞動画').trim();
+  var desc  = (document.getElementById('ytDesc').value || '').trim();
+  var tagsRaw = (document.getElementById('ytTags').value || '').trim();
+  var privacy  = document.getElementById('ytPrivacy').value;
+  var category = document.getElementById('ytCategory').value;
+  var tags = tagsRaw ? tagsRaw.split(',').map(function(t){return t.trim();}).filter(Boolean) : [];
+
+  document.getElementById('ytProgWrap').style.display = 'block';
+  document.getElementById('ytUploadBtn').disabled = true;
+  document.getElementById('ytSuccessMsg').style.display = 'none';
+
+  var metadata = {
+    snippet: { title: title, description: desc, tags: tags, categoryId: category },
+    status: { privacyStatus: privacy }
+  };
+
+  try {
+    _ytStatus('📤 アップロード初期化中...'); _ytProg(5);
+
+    var initRes = await fetch(
+      'https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet,status',
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer ' + ytAccessToken,
+          'Content-Type': 'application/json; charset=UTF-8',
+          'X-Upload-Content-Length': exportedBlob.size,
+          'X-Upload-Content-Type': exportedBlob.type || 'video/webm'
+        },
+        body: JSON.stringify(metadata)
+      }
+    );
+
+    if (!initRes.ok) {
+      var errText = await initRes.text();
+      throw new Error('初期化エラー ' + initRes.status + ': ' + errText.substring(0, 200));
+    }
+
+    var uploadUrl = initRes.headers.get('Location');
+    if (!uploadUrl) throw new Error('アップロードURLを取得できませんでした');
+
+    _ytStatus('📡 動画データ送信中...'); _ytProg(10);
+    var videoId = await _ytUploadWithProgress(uploadUrl, exportedBlob);
+
+    _ytProg(92); _ytStatus('🖼 サムネイルをアップロード中...');
+    if (thumbnailDataUrl && videoId) {
+      try { await _ytUploadThumbnail(videoId); } catch(e) { console.warn('Thumbnail failed:', e); }
+    }
+
+    _ytProg(100);
+    var videoUrl = 'https://youtu.be/' + videoId;
+    var succ = document.getElementById('ytSuccessMsg');
+    succ.style.display = 'block';
+    succ.innerHTML = '✅ アップロード完了！<br><br>'
+      + '<a href="' + videoUrl + '" target="_blank" rel="noopener" style="color:var(--accent2);font-family:\'Space Mono\',monospace;font-size:12px;word-break:break-all">' + videoUrl + '</a><br><br>'
+      + '<button class="btn btn-primary" onclick="window.open(\'' + videoUrl + '\',\'_blank\',\'noopener\')">YouTubeで開く</button>';
+    document.getElementById('ytProgWrap').style.display = 'none';
+    showToast('✅ YouTubeにアップロードしました！');
+
+  } catch(err) {
+    console.error('YT upload error:', err);
+    _ytStatus('❌ ' + err.message);
+    document.getElementById('ytUploadBtn').disabled = false;
+    showToast('❌ アップロード失敗');
+  }
+}
+
+function _ytUploadWithProgress(uploadUrl, blob) {
+  return new Promise(function(resolve, reject) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('PUT', uploadUrl, true);
+    xhr.setRequestHeader('Content-Type', blob.type || 'video/webm');
+    xhr.upload.onprogress = function(e) {
+      if (e.lengthComputable) {
+        var pct = 10 + Math.round((e.loaded / e.total) * 80);
+        _ytProg(pct);
+        _ytStatus('📡 アップロード中... ' + Math.round(e.loaded / e.total * 100) + '%  (' + _fmtBytes(e.loaded) + ' / ' + _fmtBytes(e.total) + ')');
+      }
+    };
+    xhr.onload = function() {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        try { resolve(JSON.parse(xhr.responseText).id); }
+        catch(e) { reject(new Error('レスポンス解析失敗')); }
+      } else {
+        reject(new Error('HTTP ' + xhr.status + ': ' + xhr.responseText.substring(0, 200)));
+      }
+    };
+    xhr.onerror = function() { reject(new Error('ネットワークエラー')); };
+    xhr.send(blob);
+  });
+}
+
+async function _ytUploadThumbnail(videoId) {
+  var res = await fetch(thumbnailDataUrl);
+  var thumbBlob = await res.blob();
+  var r = await fetch(
+    'https://www.googleapis.com/upload/youtube/v3/thumbnails/set?videoId=' + videoId + '&uploadType=media',
+    { method: 'POST', headers: { 'Authorization': 'Bearer ' + ytAccessToken, 'Content-Type': 'image/jpeg' }, body: thumbBlob }
+  );
+  if (!r.ok) throw new Error('Thumbnail HTTP ' + r.status);
+}
+
+function _ytProg(pct) { var el=document.getElementById('ytProgFill'); if(el) el.style.width=pct+'%'; }
+function _ytStatus(msg) { var el=document.getElementById('ytStatusMsg'); if(el) el.textContent=msg; }
+
+function showYTUploadHint() {
+  document.querySelectorAll('.yt-hint').forEach(function(h){h.remove();});
+  var hint = document.createElement('div');
+  hint.className = 'yt-hint';
+  hint.innerHTML = '<span style="color:#ff0000;font-size:20px">▶</span>'
+    + '<div><div style="font-weight:700;font-size:13px">YouTubeにアップロード</div>'
+    + '<div style="font-size:11px;color:var(--text2)">エクスポート済み動画を送信</div></div>'
+    + '<button class="btn btn-primary" style="font-size:12px;padding:6px 14px;white-space:nowrap" onclick="document.querySelectorAll(\'.yt-hint\').forEach(function(h){h.remove()});showYouTubeUploadModal()">アップロード</button>'
+    + '<span class="yt-hint-close" onclick="this.parentElement.remove()">✕</span>';
+  document.body.appendChild(hint);
+  setTimeout(function(){ document.querySelectorAll('.yt-hint').forEach(function(h){h.remove();}); }, 20000);
+}
 
 // ===========================
 // INIT
