@@ -183,6 +183,10 @@ input[type=color]{width:32px;height:24px;border:none;border-radius:4px;cursor:po
 @keyframes charBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
 @keyframes charWave{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
 @keyframes charGlitch{0%,100%{transform:translate(0)}25%{transform:translate(-3px,1px);color:#0ff}75%{transform:translate(3px,-1px);color:#f0f}}
+@keyframes charScatter{from{opacity:0;transform:translate(var(--sx,120px),var(--sy,-120px)) scale(0.2) rotate(var(--r,0deg))}to{opacity:1;transform:translate(0,0) scale(1) rotate(0deg)}}
+@keyframes charSplit{from{opacity:0;transform:translateY(calc(var(--side,1) * -60px)) scaleY(0.4)}to{opacity:1;transform:translateY(0) scaleY(1)}}
+@keyframes charBounceIn{0%{opacity:0;transform:translateY(-100px) scaleY(1.2)}50%{opacity:1;transform:translateY(10px) scaleY(0.9)}70%{transform:translateY(-6px) scaleY(1.05)}85%{transform:translateY(3px) scaleY(0.97)}100%{transform:translateY(0) scaleY(1)}}
+@keyframes charZoomRush{from{opacity:0;transform:scale(6) translateZ(0);filter:blur(8px)}60%{opacity:1}to{opacity:1;transform:scale(1) translateZ(0);filter:blur(0)}}
 @keyframes exitFadeOut{from{opacity:1}to{opacity:0}}
 @keyframes exitFadeDown{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(40px)}}
 @keyframes exitFadeUp{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-40px)}}
@@ -311,6 +315,10 @@ input[type=color]{width:32px;height:24px;border:none;border-radius:4px;cursor:po
 .sub-btn:hover{border-color:var(--accent);color:var(--text);background:rgba(124,58,237,.1)}
 .sub-btn.yt{border-color:rgba(255,0,0,.3);color:#ff6b6b}
 .sub-btn.yt:hover{background:rgba(255,0,0,.1);border-color:#ff0000}
+.thumb-bg-zone{border:2px dashed var(--border);border-radius:8px;padding:14px;text-align:center;cursor:pointer;transition:all .2s;position:relative;margin-bottom:8px;font-size:12px;color:var(--text2)}
+.thumb-bg-zone:hover{border-color:var(--accent);background:rgba(124,58,237,.06)}
+.thumb-bg-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.thumb-bg-zone.has-img{border-color:var(--green);background:rgba(34,197,94,.06);color:var(--green)}
 </style>
 </head>
 <body>
@@ -626,6 +634,10 @@ input[type=color]{width:32px;height:24px;border:none;border-radius:4px;cursor:po
         <div class="abtn" onclick="setChar('charGlitch',this)">⚡グリッチ</div>
         <div class="abtn" onclick="setChar('charBounce',this)">〜バウンス</div>
         <div class="abtn" onclick="setChar('charWave',this)">🌊ウェーブ</div>
+        <div class="abtn" onclick="setChar('charScatter',this)">✦スキャッター</div>
+        <div class="abtn" onclick="setChar('charSplit',this)">⬆⬇スプリット</div>
+        <div class="abtn" onclick="setChar('charBounceIn',this)">↓バウンス着地</div>
+        <div class="abtn" onclick="setChar('charZoomRush',this)">⊕ズームラッシュ</div>
       </div>
       <div class="ctrl-row" style="margin-top:8px"><span class="ctrl-label">文字間ディレイ</span><input type="range" id="charDelay" min="10" max="200" value="50" oninput="this.nextElementSibling.textContent=this.value+'ms'"><span class="ctrl-val">50ms</span></div>
       <button class="pbtn" onclick="previewEnter()">▶ 文字アニメをプレビュー</button>
@@ -917,13 +929,22 @@ function buildChars(text, anim) {
   var chars = Array.from(text);
   var delay = parseInt(document.getElementById('charDelay').value) || 50;
   var isLoop = (anim === 'charBounce' || anim === 'charWave');
+  var mid = Math.floor(chars.length / 2);
   return chars.map(function(ch, i) {
     if (ch === ' ') return '<span style="display:inline-block;width:.3em"> </span>';
     var d = isLoop ? (i * 0.07).toFixed(2) + 's' : (i * delay) + 'ms';
     var dur = isLoop ? getComputedStyle(document.documentElement).getPropertyValue('--loop-dur').trim() : getComputedStyle(document.documentElement).getPropertyValue('--anim-dur').trim();
     var iter = isLoop ? 'infinite' : '1';
     var rot = (Math.random() * 20 - 10).toFixed(1);
-    return '<span class="char" style="animation-name:' + anim + ';animation-duration:' + dur + ';animation-delay:' + d + ';animation-iteration-count:' + iter + ';animation-fill-mode:both;--r:' + rot + 'deg">' + ch + '</span>';
+    var extra = '--r:' + rot + 'deg';
+    if (anim === 'charScatter') {
+      var sx = (Math.random() * 360 - 180).toFixed(0);
+      var sy = (Math.random() * 260 - 130).toFixed(0);
+      extra += ';--sx:' + sx + 'px;--sy:' + sy + 'px';
+    } else if (anim === 'charSplit') {
+      extra += ';--side:' + (i < mid ? 1 : -1);
+    }
+    return '<span class="char" style="animation-name:' + anim + ';animation-duration:' + dur + ';animation-delay:' + d + ';animation-iteration-count:' + iter + ';animation-fill-mode:both;' + extra + '">' + ch + '</span>';
   }).join('');
 }
 
@@ -1826,6 +1847,7 @@ var thumbnailDataUrl = null;
 var ytAccessToken = null;
 var thumbSongTitle = '';
 var thumbArtistName = '';
+var thumbBgImageEl = null;
 
 function showThumbnailModal() {
   buildThumbnailCanvas(function(canvas) {
@@ -1845,6 +1867,19 @@ function buildThumbnailCanvas(cb) {
     if (oo > 0) { ctx.fillStyle = hexRgba(document.getElementById('overlayColor').value, oo); ctx.fillRect(0,0,W,H); }
     _drawThumbText(ctx, W, H);
     cb(canvas);
+  }
+
+  // アップロードされた背景画像が優先
+  if (thumbBgImageEl) {
+    var iar = thumbBgImageEl.naturalWidth / thumbBgImageEl.naturalHeight, car = W / H;
+    var dw, dh;
+    if (iar > car) { dh = H; dw = dh * iar; } else { dw = W; dh = dw / iar; }
+    ctx.drawImage(thumbBgImageEl, (W - dw) / 2, (H - dh) / 2, dw, dh);
+    var dimEl = document.getElementById('thumbDim');
+    var dim = dimEl ? parseInt(dimEl.value) / 100 : 0.45;
+    if (dim > 0) { ctx.fillStyle = 'rgba(0,0,0,' + dim + ')'; ctx.fillRect(0, 0, W, H); }
+    finish();
+    return;
   }
 
   if (bgType === 'solid') {
@@ -1954,13 +1989,35 @@ function _renderThumbModal() {
   document.querySelectorAll('.yt-modal-wrap').forEach(function(m){m.remove();});
   var modal = document.createElement('div');
   modal.className = 'yt-modal-wrap';
+  var hasBg = !!thumbBgImageEl;
+  var dimVal = 45;
   modal.innerHTML = '<div class="yt-modal">'
     + '<h3>🖼 サムネイル生成</h3>'
     + '<img class="thumb-preview-img" id="thumbImg" src="' + thumbnailDataUrl + '">'
+
+    // 背景画像アップロード
+    + '<div class="yt-field"><label>背景画像</label>'
+    + '<div class="thumb-bg-zone' + (hasBg ? ' has-img' : '') + '" id="thumbBgZone">'
+    + '<input type="file" accept="image/*" onchange="setThumbBg(event)">'
+    + '<span id="thumbBgLabel">' + (hasBg ? '✅ 画像設定済み（変更するにはクリック）' : '📷 クリックして背景画像をアップロード') + '</span>'
+    + '</div>'
+    + (hasBg ? '<button style="font-size:11px;color:var(--red);background:none;border:none;cursor:pointer;padding:0;margin-bottom:8px" onclick="clearThumbBg()">✕ 背景画像を削除</button>' : '')
+    + '</div>'
+
+    // 暗さスライダー（画像アップ時のみ有効）
+    + '<div class="yt-field" id="thumbDimWrap" style="' + (!hasBg ? 'opacity:.4;pointer-events:none' : '') + '">'
+    + '<label>背景の暗さ</label>'
+    + '<div style="display:flex;align-items:center;gap:10px">'
+    + '<input type="range" id="thumbDim" min="0" max="80" value="' + dimVal + '" style="flex:1" oninput="this.nextElementSibling.textContent=this.value+\'%\'">'
+    + '<span style="font-size:11px;color:var(--accent2);font-family:\'Space Mono\',monospace;min-width:36px">' + dimVal + '%</span>'
+    + '</div></div>'
+
+    // タイトル・アーティスト
     + '<div class="yt-field"><label>曲タイトル</label>'
     + '<input type="text" id="thumbTitleInput" placeholder="曲のタイトルを入力" value="' + _escAttr(thumbSongTitle) + '"></div>'
     + '<div class="yt-field"><label>歌手名 / アーティスト名</label>'
     + '<input type="text" id="thumbArtistInput" placeholder="アーティスト名を入力" value="' + _escAttr(thumbArtistName) + '"></div>'
+
     + '<div class="yt-btn-row">'
     + '<button class="pbtn" style="flex:1;margin:0" onclick="refreshThumb()">🔄 再生成</button>'
     + '<button class="pbtn" style="flex:1;margin:0" onclick="downloadThumbnail()">💾 ダウンロード</button>'
@@ -1972,6 +2029,30 @@ function _renderThumbModal() {
     + '</div>'
     + '</div>';
   document.body.appendChild(modal);
+}
+
+function setThumbBg(event) {
+  var file = event.target.files[0];
+  if (!file) return;
+  var url = URL.createObjectURL(file);
+  var img = new Image();
+  img.onload = function() {
+    thumbBgImageEl = img;
+    var zone = document.getElementById('thumbBgZone');
+    var label = document.getElementById('thumbBgLabel');
+    var dimWrap = document.getElementById('thumbDimWrap');
+    if (zone) zone.classList.add('has-img');
+    if (label) label.textContent = '✅ ' + file.name + '（変更するにはクリック）';
+    if (dimWrap) { dimWrap.style.opacity = '1'; dimWrap.style.pointerEvents = 'auto'; }
+    refreshThumb();
+  };
+  img.onerror = function() { showToast('画像の読み込みに失敗しました'); };
+  img.src = url;
+}
+
+function clearThumbBg() {
+  thumbBgImageEl = null;
+  showThumbnailModal(); // モーダルを再描画
 }
 
 function _escAttr(s) {
