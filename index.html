@@ -2159,26 +2159,25 @@ async function doYTUpload() {
   try {
     _ytStatus('📤 アップロード初期化中...'); _ytProg(5);
 
-    var initRes = await fetch(
-      'https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet,status',
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': 'Bearer ' + ytAccessToken,
-          'Content-Type': 'application/json; charset=UTF-8',
-          'X-Upload-Content-Length': exportedBlob.size,
-          'X-Upload-Content-Type': exportedBlob.type || 'video/webm'
-        },
-        body: JSON.stringify(metadata)
-      }
-    );
+    // X-Upload-Content-* ヘッダーは CORS プリフライトをブロックするため省略
+    var uploadUrl = await new Promise(function(resolve, reject) {
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', 'https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet,status', true);
+      xhr.setRequestHeader('Authorization', 'Bearer ' + ytAccessToken);
+      xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+      xhr.onload = function() {
+        if (xhr.status === 200) {
+          var loc = xhr.getResponseHeader('Location');
+          if (loc) { resolve(loc); }
+          else { reject(new Error('Location ヘッダーが見つかりませんでした')); }
+        } else {
+          reject(new Error('初期化エラー HTTP ' + xhr.status + ': ' + xhr.responseText.substring(0, 300)));
+        }
+      };
+      xhr.onerror = function() { reject(new Error('ネットワークエラー（CORS または接続不可）')); };
+      xhr.send(JSON.stringify(metadata));
+    });
 
-    if (!initRes.ok) {
-      var errText = await initRes.text();
-      throw new Error('初期化エラー ' + initRes.status + ': ' + errText.substring(0, 200));
-    }
-
-    var uploadUrl = initRes.headers.get('Location');
     if (!uploadUrl) throw new Error('アップロードURLを取得できませんでした');
 
     _ytStatus('📡 動画データ送信中...'); _ytProg(10);
